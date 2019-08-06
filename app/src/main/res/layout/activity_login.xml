@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/aldrich_regular"
+            android:text="GETGUARD"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="36sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/form_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Регистрация и вход"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp" />
+
+                <FrameLayout
+                    android:id="@+id/type_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="48dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/customer_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/customer_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="заказчик"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorYellow"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:id="@+id/customer_line"
+                                android:layout_width="match_parent"
+                                android:layout_height="3dp"
+                                android:layout_gravity="bottom"
+                                android:background="@color/colorYellow"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/guard_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/guard_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="Охранник"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:id="@+id/guard_line"
+                                android:layout_width="match_parent"
+                                android:layout_height="3dp"
+                                android:layout_gravity="bottom"
+                                android:background="@color/colorYellow"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.1dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/colorGray" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="32dp"
+                    android:text="Введите номер вашего мобильного телефона"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp" />
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
+                    android:id="@+id/phone_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48sp"
+                    android:layout_marginEnd="48dp"
+                    android:backgroundTint="@color/colorYellow"
+                    android:inputType="number"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="32sp"
+                    mask:allowed_chars="1234567890"
+                    mask:keep_hint="false"
+                    mask:mask="+7 ### ##-##-##" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/continue_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="48dp"
+                    android:background="@drawable/round_btn"
+                    android:text="продолжить"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <br.com.sapereaude.maskedEditText.MaskedEditText
+                    android:id="@+id/code_input"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorYellow"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="32sp"
+                    android:visibility="gone"
+                    mask:allowed_chars="1234567890"
+                    mask:keep_hint="false"
+                    mask:mask="####" />
+
+                <TextView
+                    android:id="@+id/send_sms_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="32dp"
+                    android:fontFamily="@font/museo_fonts"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="Отправить СМС еще раз"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="20dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/edit_number_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="32dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:text="Изменить номер телефона"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorYellow"
+                    android:textSize="20dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/oferta_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:paddingTop="8dp"
+                            android:text="Оферта"
+                            android:textAllCaps="true"
+                            android:textAlignment="center"
+                            android:textColor="@color/text_black"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:text="1. Обработка персональных данных 1.1. Оставляя при оформлении формы обратной связи свои персональные данные в форму на Сайте в сети Интернет, Пользователь дает свое согласие на обработку персональных данных, как без использования средств автоматизации, так и с ихиспользованием. Указанное согласие предоставляется пользователем Сайта. 1.2. Настоящим Пользователь подтверждает, что он передает свои персональные данные для обработки Компании и согласен на их обработку. Пользователь также уведомлен, что обработка его персональных данных будет осуществляться Компанией на основании пункта 5 части 1 статьи 6 Федерального закона № 152-ФЗ от 27 июля 2006 года «О персональных данных» (в редакции от 25.07.2011), а также на основании пункта 1 части 1 статьи 6 Федерального закона № 152-ФЗ от 27 июля 2006 года «О персональных данных» (в редакции от 25.07.2011) в связи с чем Пользователь при необходимости выдает согласие на обработку персональных данных. 1.3. Пользователь дает Компании согласие на обработку следующих персональных данных: 1.3.1. фамилия, имя, отчество; 1.3.2. номера контактных телефонов;"
+                            android:textColor="@color/text_color_gray"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+                <LinearLayout
+                    android:id="@+id/accept_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@color/colorYellow"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="принять"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
