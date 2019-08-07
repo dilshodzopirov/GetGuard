@@ -32,40 +32,12 @@ public class Utils {
         return "";
     }
 
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
-    }
-
-    public static int[] longToDate(long timeStamp) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timeStamp);
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        return new int[]{day, month, year};
-    }
-
-    public static long dateToLong(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        try {
-            Date date1 = sdf.parse(date);
-            return date1.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public static String roundAmount(double digit) {
+        String res = String.valueOf(digit);
+        if (res.endsWith(".0")) {
+            res = res.substring(0, res.length() - 2);
         }
-
-        return 0L;
-    }
-
-    public static int dpToPixel(Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
+        return res;
     }
 
     public static void startGalleryActivity(AppCompatActivity activity) {

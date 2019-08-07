@@ -1,5 +1,6 @@
 package com.getguard.client.adapters;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.getguard.client.R;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
@@ -49,12 +55,24 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
             holder.getEventText().setText(eventType.getName());
             Glide.with(holder.itemView.getContext())
                     .load(Config.BASE_URL + eventType.getUrl())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            holder.overlayBg.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .apply(new RequestOptions().centerCrop())
                     .into(holder.getBgImg());
         }
         holder.getAddressText().setText(item.getAddress());
         holder.getDateText().setText(Utils.dateFormat(item.getStartDate()) + " - " + Utils.dateFormat(item.getEndDate()));
-        holder.getPriceText().setText(String.valueOf(item.getRatePrice()));
+        holder.getPriceText().setText(Utils.roundAmount(item.getRatePrice()));
 
     }
 
@@ -78,6 +96,7 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
         private FrameLayout holder;
         private TextView eventText, addressText, dateText, priceText;
         private ImageView bgImg;
+        private View overlayBg;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -88,7 +107,12 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
             dateText = itemView.findViewById(R.id.date_text);
             priceText = itemView.findViewById(R.id.price_text);
             bgImg = itemView.findViewById(R.id.bg_img);
+            overlayBg = itemView.findViewById(R.id.overlay_bg);
 
+        }
+
+        public View getOverlayBg() {
+            return overlayBg;
         }
 
         public TextView getEventText() {

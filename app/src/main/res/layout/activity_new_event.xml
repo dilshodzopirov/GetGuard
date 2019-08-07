@@ -43,39 +43,46 @@
                     android:layout_margin="16dp"
                     android:layout_weight="1"
                     android:text="Форма одежды"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/form_option_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="Камуфляж"
+                    android:text="Любая"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/form_option_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
                 android:padding="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
+                    android:id="@+id/form_1_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/form_1_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Любая"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -83,7 +90,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/form_1_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -93,18 +100,20 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/form_2_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/form_2_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Камуфляж"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -112,7 +121,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/form_2_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -122,18 +131,20 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/form_3_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/form_3_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Костюм"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -141,7 +152,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/form_3_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -170,11 +181,12 @@
                     android:layout_margin="16dp"
                     android:layout_weight="1"
                     android:text="Лицензия частного охранника"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
                 <com.suke.widget.SwitchButton
-                    android:id="@+id/switch_button"
+                    android:id="@+id/licence_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:sb_checkline_color="@android:color/transparent"
@@ -200,16 +212,32 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:layout_weight="1"
                     android:text="Оружия"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/selected_weapon_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:text="Оружия"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:visibility="invisible"/>
+
                 <com.suke.widget.SwitchButton
-                    android:id="@+id/switch_button"
+                    android:id="@+id/weapon_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:sb_checkline_color="@android:color/transparent"
@@ -223,25 +251,29 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/weapon_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
                 android:padding="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
+                    android:id="@+id/weapon_1_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/weapon_1_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Травматическое"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -249,7 +281,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/weapon_1_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -259,18 +291,20 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/weapon_2_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/weapon_2_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Боевое"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -278,7 +312,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/weapon_2_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -302,16 +336,32 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:layout_weight="1"
                     android:text="Наличие автомобиля"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/selected_car_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:text="Эконом"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:visibility="invisible"/>
+
                 <com.suke.widget.SwitchButton
-                    android:id="@+id/switch_button"
+                    android:id="@+id/car_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:sb_checkline_color="@android:color/transparent"
@@ -325,25 +375,29 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/car_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
                 android:padding="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
+                    android:id="@+id/car_1_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/car_1_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Эконом"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -351,7 +405,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/car_1_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -361,18 +415,20 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/car_2_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/car_2_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Комфорт"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -380,7 +436,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/car_2_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -390,18 +446,20 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/car_3_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/customer_text"
+                        android:id="@+id/car_3_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:text="Бизнес"
+                        android:fontFamily="@font/museo_sans_cyrl_700"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -409,7 +467,7 @@
                         android:textStyle="bold" />
 
                     <View
-                        android:id="@+id/customer_line"
+                        android:id="@+id/car_3_line"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:layout_gravity="bottom"
@@ -634,6 +692,7 @@
             android:text="Опубликовать"
             android:textAllCaps="true"
             android:textColor="@color/colorWhite"
+            android:fontFamily="@font/museo_sans_cyrl_700"
             android:textSize="18sp" />
 
     </LinearLayout>

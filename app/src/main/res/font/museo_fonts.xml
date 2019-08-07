@@ -2,10 +2,43 @@
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
     <font
         android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/museo_sans_500" />
+        android:fontWeight="100"
+        android:font="@font/museo_sans_cyrl_100" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="300"
+        android:font="@font/museo_sans_cyrl_300" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="500"
+        android:font="@font/museo_sans_cyrl_500" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        android:font="@font/museo_sans_cyrl_700" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="100"
+        android:font="@font/museo_sans_cyrl_900" />
+
     <font
         android:fontStyle="italic"
-        android:fontWeight="400"
-        android:font="@font/museo_sans_500_italic" />
+        android:fontWeight="100"
+        android:font="@font/museo_sans_cyrl_100_italic" />
+    <font
+        android:fontStyle="italic"
+        android:fontWeight="300"
+        android:font="@font/museo_sans_cyrl_300_italic" />
+    <font
+        android:fontStyle="italic"
+        android:fontWeight="500"
+        android:font="@font/museo_sans_cyrl_500_italic" />
+    <font
+        android:fontStyle="italic"
+        android:fontWeight="700"
+        android:font="@font/museo_sans_cyrl_700_italic" />
+    <font
+        android:fontStyle="italic"
+        android:fontWeight="100"
+        android:font="@font/museo_sans_cyrl_900_italic" />
 </font-family>

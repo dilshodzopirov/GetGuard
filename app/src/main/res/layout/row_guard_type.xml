@@ -22,6 +22,7 @@
             android:src="@drawable/donut" />
 
         <View
+            android:id="@+id/overlay_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/primaryTransparent" />
@@ -48,6 +49,7 @@
                     android:layout_marginBottom="8dp"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:fontFamily="@font/museo_sans_cyrl_300"
                     android:text="Lichnaya oxrana"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp" />
@@ -61,6 +63,7 @@
                     android:layout_marginRight="16dp"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:fontFamily="@font/museo_sans_cyrl_100"
                     android:text="Санкт-Петербург"
                     android:textColor="@color/colorWhite"
                     android:textSize="14sp" />
@@ -78,12 +81,23 @@
                     android:paddingBottom="4dp">
 
                     <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:fontFamily="@font/museo_sans_cyrl_100"
+                        android:text="от "
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                    <TextView
                         android:id="@+id/price_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="от 500"
+                        android:fontFamily="@font/museo_sans_cyrl_100"
+                        android:text="500"
                         android:textColor="@color/colorWhite"
                         android:textSize="20sp" />
 
@@ -93,6 +107,7 @@
                         android:layout_marginLeft="4dp"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:fontFamily="@font/museo_sans_cyrl_100"
                         android:text="р/час"
                         android:textColor="@color/colorWhite"
                         android:textSize="14sp" />

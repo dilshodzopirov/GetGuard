@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TabAdapter adapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private LinearLayout createLayout;
+    private LinearLayout createLayout, headerContainer;
 
     private UserDAO userDAO;
     private User user;
@@ -52,10 +54,15 @@ public class MainActivity extends AppCompatActivity {
         userDAO = AppDatabase.getInstance(this).getUserDAO();
         user = userDAO.getUser();
 
+        nv = findViewById(R.id.nv);
         dl = findViewById(R.id.drawer);
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
         createLayout = findViewById(R.id.create_layout);
+
+        View headerLayout = nv.getHeaderView(0);
+
+        headerContainer = headerLayout.findViewById(R.id.header_container);
 
         t = new ActionBarDrawerToggle(this, dl, android.R.string.ok, android.R.string.no);
 
@@ -64,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        nv = findViewById(R.id.nv);
         nv.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             switch (id) {
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.oferta:
-                    Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, OfertaActivity.class));
                     break;
                 case R.id.settings:
                     Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
             }
 
+            dl.closeDrawer(GravityCompat.START);
 
             return true;
 
@@ -103,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
         createLayout.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, SelectEventTypeActivity.class));
+        });
+
+        headerContainer.setOnClickListener(v -> {
+            dl.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         });
 
     }

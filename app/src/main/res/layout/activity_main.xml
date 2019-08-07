@@ -71,6 +71,7 @@
                     android:text="Создать заявку"
                     android:textAllCaps="true"
                     android:textColor="@color/colorWhite"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
                     android:textSize="18sp" />
 
             </LinearLayout>

@@ -18,6 +18,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activities.OfertaActivity"></activity>
+        <activity android:name=".activities.ProfileActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -34,7 +36,7 @@
             android:name=".activities.NewEventActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.SelectEventTypeActivity" />
-        <activity android:name=".activities.MainActivity"/>
+        <activity android:name=".activities.MainActivity" />
     </application>
 
 </manifest>
