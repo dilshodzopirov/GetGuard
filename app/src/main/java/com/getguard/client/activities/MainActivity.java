@@ -6,34 +6,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentManager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.getguard.client.R;
-import com.getguard.client.adapters.TabAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
 import com.getguard.client.database.UserDAO;
-import com.getguard.client.fragments.EventsFragment;
+import com.getguard.client.fragments.HistoryFragment;
+import com.getguard.client.fragments.MainFragment;
+import com.getguard.client.fragments.OfertaFragment;
+import com.getguard.client.fragments.ProfileFragment;
+import com.getguard.client.fragments.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
-    private TabAdapter adapter;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private LinearLayout createLayout, headerContainer;
+    private LinearLayout headerContainer;
+    private TextView titleText;
 
     private UserDAO userDAO;
     private User user;
@@ -49,16 +48,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        getSupportActionBar().setTitle("GET GUARD");
+        getSupportActionBar().setTitle("");
 
         userDAO = AppDatabase.getInstance(this).getUserDAO();
         user = userDAO.getUser();
 
         nv = findViewById(R.id.nv);
         dl = findViewById(R.id.drawer);
-        viewPager = findViewById(R.id.viewPager);
-        tabLayout = findViewById(R.id.tabLayout);
-        createLayout = findViewById(R.id.create_layout);
+        titleText = findViewById(R.id.title_text);
 
         View headerLayout = nv.getHeaderView(0);
 
@@ -71,20 +68,25 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        nv.getMenu().getItem(0).setChecked(true);
+        fragmentManager.beginTransaction().replace(R.id.content_layout, new MainFragment()).commit();
+
         nv.setNavigationItemSelectedListener(item -> {
+
             int id = item.getItemId();
             switch (id) {
                 case R.id.main:
-                    Toast.makeText(MainActivity.this, "My Account", Toast.LENGTH_SHORT).show();
+                    fragmentManager.beginTransaction().replace(R.id.content_layout, new MainFragment()).commit();
                     break;
                 case R.id.history:
-                    Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                    fragmentManager.beginTransaction().replace(R.id.content_layout, new HistoryFragment()).commit();
                     break;
                 case R.id.oferta:
-                    startActivity(new Intent(MainActivity.this, OfertaActivity.class));
+                    fragmentManager.beginTransaction().replace(R.id.content_layout, new OfertaFragment()).commit();
                     break;
                 case R.id.settings:
-                    Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    fragmentManager.beginTransaction().replace(R.id.content_layout, new SettingsFragment()).commit();
                     break;
                 case R.id.log_out:
                     logOut();
@@ -95,26 +97,27 @@ public class MainActivity extends AppCompatActivity {
 
             dl.closeDrawer(GravityCompat.START);
 
+            if (item.getItemId() == R.id.main) {
+                getSupportActionBar().setTitle("");
+                titleText.setVisibility(View.VISIBLE);
+            } else {
+                getSupportActionBar().setTitle(item.getTitle());
+                titleText.setVisibility(View.GONE);
+            }
+
             return true;
 
         });
 
-        viewPager.setOffscreenPageLimit(3);
-
-        adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(EventsFragment.newInstance(0), "Все");
-        adapter.addFragment(EventsFragment.newInstance(1), "Мои заявки");
-        adapter.addFragment(EventsFragment.newInstance(2), "Активные");
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-
-        createLayout.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, SelectEventTypeActivity.class));
-        });
-
         headerContainer.setOnClickListener(v -> {
             dl.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            fragmentManager.beginTransaction().replace(R.id.content_layout, new ProfileFragment()).commit();
+            int size = nv.getMenu().size();
+            for (int i = 0; i < size; i++) {
+                nv.getMenu().getItem(i).setChecked(false);
+            }
+            getSupportActionBar().setTitle("Профиль");
+            titleText.setVisibility(View.GONE);
         });
 
     }

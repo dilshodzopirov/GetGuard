@@ -25,56 +25,27 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/colorPrimary"
                     app:popupTheme="@style/AppTheme.PopupOverlay"
-                    app:theme="@style/ToolbarTheme" />
+                    app:theme="@style/ToolbarTheme">
+
+                    <TextView
+                        android:id="@+id/title_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/aldrich_regular"
+                        android:letterSpacing="0.3"
+                        android:text="GETGUARD"/>
+
+                </androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
+            <FrameLayout
+                android:id="@+id/content_layout"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?actionBarSize"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="@color/colorYellow"
-                app:tabTextColor="@color/colorGray"
-                app:tabSelectedTextColor="@color/colorYellow"
-                app:tabIndicatorHeight="4dp"
-                app:tabBackground="@color/colorWhite"
-                app:tabMode="fixed">
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            </androidx.viewpager.widget.ViewPager>
-
-
-            <LinearLayout
-                android:id="@+id/create_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorYellow"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_add_circle"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text="Создать заявку"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorWhite"
-                    android:fontFamily="@font/museo_sans_cyrl_500"
-                    android:textSize="18sp" />
-
-            </LinearLayout>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
