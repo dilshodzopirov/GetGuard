@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Регистрация и вход"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/museo_sans_cyrl_300"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/sms_info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:text="На номер отправлено СМС с кодом из 4-цифр"
+        android:fontFamily="@font/museo_sans_cyrl_300"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp" />
+
+    <br.com.sapereaude.maskedEditText.MaskedEditText
+        android:id="@+id/code_input"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorYellow"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="32sp"
+        android:visibility="visible"
+        mask:allowed_chars="1234567890"
+        mask:keep_hint="false"
+        mask:mask="####" />
+
+    <TextView
+        android:id="@+id/send_sms_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        android:fontFamily="@font/museo_fonts"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:text="Отправить СМС еще раз"
+        android:textAlignment="center"
+        android:textColor="@color/colorYellow"
+        android:textSize="20dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/edit_number_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="32dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:text="Изменить номер телефона"
+        android:textAlignment="center"
+        android:textColor="@color/colorYellow"
+        android:textSize="20dp"
+        android:visibility="visible" />
+
+</LinearLayout>

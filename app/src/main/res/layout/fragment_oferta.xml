@@ -6,9 +6,11 @@
     android:orientation="vertical"
     tools:context=".fragments.OfertaFragment">
 
-    <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdf_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="16dp"
+        android:clipToPadding="false"/>
 
 </LinearLayout>

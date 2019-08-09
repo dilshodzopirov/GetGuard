@@ -2,9 +2,12 @@ package com.getguard.client.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -12,13 +15,19 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.getguard.client.R;
+import com.getguard.client.adapters.OfertaAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 
@@ -27,18 +36,22 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private MaskedEditText phoneInput, codeInput;
-    private AppCompatButton continueBtn;
-    private LinearLayout customerContainer, guardContainer, formContainer, ofertaContainer, acceptContainer;
-    private TextView customerText, guardText, sendSmsText, editNumberText;
+    private AppCompatButton continueBtn, formContinueBtn;
+    private LinearLayout customerContainer, guardContainer, phoneLayout, ofertaLayout, codeLayout, acceptContainer, formLayout;
+    private TextView customerText, guardText, sendSmsText, editNumberText, smsInfoText;
     private View customerLine, guardLine;
-    private FrameLayout typeContainer;
 
     private int white, yellow;
     private ViewState viewState = ViewState.phone;
     private CountDownTimer timer;
+    private UserType userType = UserType.client;
 
     private enum ViewState {
-        phone, sms, oferta
+        phone, sms, form, oferta
+    }
+
+    private enum UserType {
+        client, guard
     }
 
     @Override
@@ -60,10 +73,13 @@ public class LoginActivity extends AppCompatActivity {
         codeInput = findViewById(R.id.code_input);
         sendSmsText = findViewById(R.id.send_sms_text);
         editNumberText = findViewById(R.id.edit_number_text);
-        typeContainer = findViewById(R.id.type_container);
-        formContainer = findViewById(R.id.form_container);
-        ofertaContainer = findViewById(R.id.oferta_container);
+        phoneLayout = findViewById(R.id.layout_phone);
+        ofertaLayout = findViewById(R.id.layout_oferta);
+        codeLayout = findViewById(R.id.layout_code);
         acceptContainer = findViewById(R.id.accept_container);
+        smsInfoText = findViewById(R.id.sms_info_text);
+        formLayout = findViewById(R.id.layout_form);
+        formContinueBtn = findViewById(R.id.form_continue_btn);
 
         continueBtn.setOnClickListener(v -> {
             Log.d("test", phoneInput.getText().toString() + " : " + phoneInput.getRawText());
@@ -71,8 +87,14 @@ public class LoginActivity extends AppCompatActivity {
             updateViewState(ViewState.sms);
         });
 
-        customerContainer.setOnClickListener(v -> switchType(0));
-        guardContainer.setOnClickListener(v -> switchType(1));
+        formContinueBtn.setOnClickListener(v -> {
+            Log.d("test", phoneInput.getText().toString() + " : " + phoneInput.getRawText());
+            closeKeyboard();
+            updateViewState(ViewState.oferta);
+        });
+
+        customerContainer.setOnClickListener(v -> switchType(UserType.client));
+        guardContainer.setOnClickListener(v -> switchType(UserType.guard));
 
         phoneInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -105,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() >= 4) {
                     closeKeyboard();
-                    updateViewState(ViewState.oferta);
+                    updateViewState(userType == UserType.client ? ViewState.form : ViewState.oferta);
                 }
                 Log.d(TAG, "afterTextChanged: " + editable.length());
             }
@@ -125,34 +147,58 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
 
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        OfertaAdapter adapter = new OfertaAdapter();
+        recyclerView.setAdapter(adapter);
+
+        InputStream is = null;
+        try {
+            is = getAssets().open("oferta.html");
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+
+            String str = new String(buffer);
+            final String arr[] = str.split("§");
+            List<String> paragraphs = Arrays.asList(arr);
+            adapter.setItems(paragraphs);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    private void switchType(int type) {
-        customerText.setTextColor(type == 0 ? yellow : white);
-        guardText.setTextColor(type == 0 ? white : yellow);
-        customerLine.setVisibility(type == 0 ? View.VISIBLE : View.GONE);
-        guardLine.setVisibility(type == 0 ? View.GONE : View.VISIBLE);
+    private void switchType(UserType type) {
+        userType = type;
+        customerText.setTextColor(type == UserType.client ? yellow : white);
+        guardText.setTextColor(type == UserType.client ? white : yellow);
+        customerLine.setVisibility(type == UserType.client ? View.VISIBLE : View.GONE);
+        guardLine.setVisibility(type == UserType.client ? View.GONE : View.VISIBLE);
     }
 
     private void updateViewState(ViewState state) {
         viewState = state;
         switch (state) {
             case phone:
-                phoneInput.setVisibility(View.VISIBLE);
-                continueBtn.setVisibility(View.VISIBLE);
-                typeContainer.setVisibility(View.VISIBLE);
-                codeInput.setVisibility(View.GONE);
-                sendSmsText.setVisibility(View.GONE);
-                editNumberText.setVisibility(View.GONE);
+                phoneLayout.setVisibility(View.VISIBLE);
+                codeLayout.setVisibility(View.GONE);
+                ofertaLayout.setVisibility(View.GONE);
+                formLayout.setVisibility(View.GONE);
                 break;
             case sms:
-                phoneInput.setVisibility(View.GONE);
-                continueBtn.setVisibility(View.GONE);
-                typeContainer.setVisibility(View.GONE);
-                codeInput.setVisibility(View.VISIBLE);
-                sendSmsText.setVisibility(View.VISIBLE);
-                editNumberText.setVisibility(View.VISIBLE);
+                phoneLayout.setVisibility(View.GONE);
+                codeLayout.setVisibility(View.VISIBLE);
+                ofertaLayout.setVisibility(View.GONE);
+                formLayout.setVisibility(View.GONE);
 
+                smsInfoText.setText(String.format("На номер %s отправлено СМС с кодом из 4-цифр", phoneInput.getText().toString()));
+
+                sendSmsText.setTextColor(white);
+                sendSmsText.setTypeface(Typeface.create("@font/museo_sans_cyrl_700", Typeface.NORMAL));
                 timer = new CountDownTimer(30000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
@@ -160,14 +206,25 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     public void onFinish() {
+                        sendSmsText.setTextColor(yellow);
+                        sendSmsText.setTypeface(Typeface.create("@font/museo_sans_cyrl_300", Typeface.NORMAL));
                         sendSmsText.setText("Отправить СМС еще раз");
                     }
                 }.start();
                 break;
+            case form:
+                if (timer != null) timer.cancel();
+                phoneLayout.setVisibility(View.GONE);
+                codeLayout.setVisibility(View.GONE);
+                ofertaLayout.setVisibility(View.GONE);
+                formLayout.setVisibility(View.VISIBLE);
+                break;
             case oferta:
                 if (timer != null) timer.cancel();
-                formContainer.setVisibility(View.GONE);
-                ofertaContainer.setVisibility(View.VISIBLE);
+                phoneLayout.setVisibility(View.GONE);
+                codeLayout.setVisibility(View.GONE);
+                formLayout.setVisibility(View.GONE);
+                ofertaLayout.setVisibility(View.VISIBLE);
                 break;
         }
     }

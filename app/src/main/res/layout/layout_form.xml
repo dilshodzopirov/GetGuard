@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="32dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Имя"
+        android:fontFamily="@font/museo_sans_cyrl_300"
+        android:textColor="@color/colorYellow"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/first_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorYellow"
+        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Фамилия"
+        android:fontFamily="@font/museo_sans_cyrl_300"
+        android:textColor="@color/colorYellow"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/last_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorYellow"
+        android:inputType="textPersonName"
+        android:imeOptions="actionNext"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Отчество"
+        android:fontFamily="@font/museo_sans_cyrl_300"
+        android:textColor="@color/colorYellow"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/fathers_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorYellow"
+        android:inputType="textPersonName"
+        android:imeOptions="actionDone"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/form_continue_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/round_btn"
+        android:text="продолжить"
+        android:fontFamily="@font/museo_sans_cyrl_700"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:visibility="visible" />
+
+</LinearLayout>
