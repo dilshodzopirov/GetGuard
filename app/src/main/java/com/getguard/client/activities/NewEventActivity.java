@@ -2,17 +2,25 @@ package com.getguard.client.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.getguard.client.R;
+import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.suke.widget.SwitchButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -29,12 +37,15 @@ public class NewEventActivity extends AppCompatActivity {
     private TextView formOptionText, form1Text, form2Text, form3Text;
     private View form1Line, form2Line, form3Line;
     private SwitchButton licenceSwitch, weaponSwitch, carSwitch;
-    private LinearLayout weaponContainer, weapon1Container, weapon2Container;
-    private TextView weapon1Text, weapon2Text, selectedWeaponText;
+    private LinearLayout weaponContainer, weapon1Container, weapon2Container, offerLayout, offerAmountLayout;
+    private TextView weapon1Text, weapon2Text, selectedWeaponText, offerAmountText;
     private View weapon1Line, weapon2Line;
     private LinearLayout carContainer, car1Container, car2Container, car3Container;
     private TextView car1Text, car2Text, car3Text, selectedCarText;
     private View car1Line, car2Line, car3Line;
+    private AppCompatEditText startTimeInput, endTimeInput;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM, EEEE HH:mm", new Locale("ru", "RU"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +100,13 @@ public class NewEventActivity extends AppCompatActivity {
         car3Line = findViewById(R.id.car_3_line);
         selectedCarText = findViewById(R.id.selected_car_text);
 
+        offerLayout = findViewById(R.id.offer_layout);
+        offerAmountLayout = findViewById(R.id.offer_amount_layout);
+        offerAmountText = findViewById(R.id.offer_amount_text);
+
+        startTimeInput = findViewById(R.id.start_time_input);
+        endTimeInput = findViewById(R.id.end_time_input);
+
         formOptionText.setOnClickListener(v -> {
             formOptionContainer.setVisibility(View.VISIBLE);
         });
@@ -124,6 +142,38 @@ public class NewEventActivity extends AppCompatActivity {
         car2Container.setOnClickListener(v -> setCarOption(2));
         car3Container.setOnClickListener(v -> setCarOption(3));
 
+        startTimeInput.setOnClickListener(v -> {
+            new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
+                    .bottomSheet()
+                    .curved()
+                    .mainColor(Color.BLACK)
+                    .customLocale(new Locale("ru", "RU"))
+                    .minDateRange(new Date())
+                    .title("Начало смены")
+                    .listener(date -> {
+                        startTimeInput.setText("Начало смены - " + dateFormat.format(date));
+                    })
+                    .display();
+        });
+
+        endTimeInput.setOnClickListener(v -> {
+            new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
+                    .bottomSheet()
+                    .curved()
+                    .mainColor(Color.BLACK)
+                    .customLocale(new Locale("ru", "RU"))
+                    .minDateRange(new Date())
+                    .title("Конец смены")
+                    .listener(date -> {
+                        endTimeInput.setText("Конец смены - " + dateFormat.format(date));
+                    })
+                    .display();
+        });
+
+        offerLayout.setOnClickListener(v -> {
+            startActivityForResult(new Intent(NewEventActivity.this, OfferActivity.class), 1111);
+        });
+
     }
 
     @Override
@@ -134,6 +184,16 @@ public class NewEventActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1111 && resultCode == RESULT_OK) {
+            offerAmountText.setText(data.getStringExtra("amount"));
+            offerAmountLayout.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void setFormOption(int option) {
