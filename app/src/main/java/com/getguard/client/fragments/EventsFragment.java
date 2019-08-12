@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.getguard.client.R;
 import com.getguard.client.activities.EventDetailsActivity;
+import com.getguard.client.activities.NewEventActivity;
 import com.getguard.client.adapters.GuardAdapter;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
@@ -70,9 +71,15 @@ public class EventsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new GuardAdapter(item -> {
-            Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
-            intent.putExtra("id", item.getId());
-            startActivity(intent);
+            if (filter == 1 || filter == 0) {
+                Intent intent = new Intent(getActivity(), NewEventActivity.class);
+                intent.putExtra("id", item.getId());
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+                intent.putExtra("id", item.getId());
+                startActivity(intent);
+            }
         });
 
         recyclerView.setAdapter(adapter);

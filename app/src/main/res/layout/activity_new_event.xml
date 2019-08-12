@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#E5E5E5"
     android:orientation="vertical">
 
@@ -42,8 +42,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:layout_weight="1"
-                    android:text="Форма одежды"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="Форма одежды"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
@@ -52,8 +52,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="Любая"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="Любая"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
@@ -64,8 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
-                android:padding="16dp"
                 android:orientation="horizontal"
+                android:padding="16dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -81,8 +81,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Любая"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Любая"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -112,8 +112,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Камуфляж"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Камуфляж"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -143,8 +143,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Костюм"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Костюм"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -176,26 +176,41 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:layout_weight="1"
-                    android:text="Лицензия частного охранника"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="Лицензия частного охранника"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/licence_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:singleLine="true"
+                    android:text="Оружия"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
 
                 <com.suke.widget.SwitchButton
                     android:id="@+id/licence_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:sb_checkline_color="@android:color/transparent"
-                    app:sb_uncheckcircle_color="@android:color/transparent"
-                    app:sb_checked_color="@color/colorPrimary"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:sb_checked_color="@color/colorPrimary"
+                    app:sb_checkline_color="@android:color/transparent"
+                    app:sb_uncheckcircle_color="@android:color/transparent" />
 
             </LinearLayout>
 
@@ -215,8 +230,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="Оружия"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="Оружия"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
@@ -225,28 +240,28 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:textAlignment="textEnd"
-                    android:text="Оружия"
-                    android:singleLine="true"
                     android:ellipsize="end"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:singleLine="true"
+                    android:text="Оружия"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <com.suke.widget.SwitchButton
                     android:id="@+id/weapon_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:sb_checkline_color="@android:color/transparent"
-                    app:sb_uncheckcircle_color="@android:color/transparent"
-                    app:sb_checked_color="@color/colorPrimary"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:sb_checked_color="@color/colorPrimary"
+                    app:sb_checkline_color="@android:color/transparent"
+                    app:sb_uncheckcircle_color="@android:color/transparent" />
 
             </LinearLayout>
 
@@ -255,8 +270,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
-                android:padding="16dp"
                 android:orientation="horizontal"
+                android:padding="16dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -272,8 +287,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Травматическое"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Травматическое"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -303,8 +318,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Боевое"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Боевое"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -339,8 +354,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="Наличие автомобиля"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="Наличие автомобиля"
                     android:textColor="#4F4F4F"
                     android:textSize="16sp" />
 
@@ -349,28 +364,28 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:textAlignment="textEnd"
-                    android:text="Эконом"
-                    android:singleLine="true"
                     android:ellipsize="end"
                     android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:singleLine="true"
+                    android:text="Эконом"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <com.suke.widget.SwitchButton
                     android:id="@+id/car_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:sb_checkline_color="@android:color/transparent"
-                    app:sb_uncheckcircle_color="@android:color/transparent"
-                    app:sb_checked_color="@color/colorPrimary"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:sb_checked_color="@color/colorPrimary"
+                    app:sb_checkline_color="@android:color/transparent"
+                    app:sb_uncheckcircle_color="@android:color/transparent" />
 
             </LinearLayout>
 
@@ -379,8 +394,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F2F2F2"
-                android:padding="16dp"
                 android:orientation="horizontal"
+                android:padding="16dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -396,8 +411,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Эконом"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Эконом"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorYellow"
@@ -427,8 +442,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Комфорт"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Комфорт"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -458,8 +473,8 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Бизнес"
                         android:fontFamily="@font/museo_sans_cyrl_700"
+                        android:text="Бизнес"
                         android:textAlignment="center"
                         android:textAllCaps="true"
                         android:textColor="@color/colorGrayLight"
@@ -505,16 +520,17 @@
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/address_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/edit_text_bg"
-                        android:hint="Адрес"
-                        android:textColorHint="#4F4F4F"
-                        android:textColor="@color/colorPrimary"
                         android:fontFamily="@font/museo_sans_cyrl_500"
+                        android:hint="Адрес"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="#4F4F4F"
                         android:textSize="16sp" />
 
                     <View
@@ -551,16 +567,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/edit_text_bg"
-                        android:hint="Начало смены"
-                        android:inputType="textMultiLine|textNoSuggestions"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:textColorHint="#4F4F4F"
-                        android:textColor="@color/colorPrimary"
                         android:fontFamily="@font/museo_sans_cyrl_500"
+                        android:hint="Начало смены"
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="#4F4F4F"
                         android:textSize="16sp" />
 
                     <View
@@ -597,16 +613,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/edit_text_bg"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
+                        android:fontFamily="@font/museo_sans_cyrl_500"
                         android:hint="Конец смены"
                         android:inputType="textMultiLine|textNoSuggestions"
-                        android:textColorHint="#4F4F4F"
                         android:textColor="@color/colorPrimary"
-                        android:fontFamily="@font/museo_sans_cyrl_500"
+                        android:textColorHint="#4F4F4F"
                         android:textSize="16sp" />
 
                     <View
@@ -639,16 +655,17 @@
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/additional_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
                         android:background="@drawable/edit_text_bg"
-                        android:hint="Дополнительная информация"
-                        android:textColorHint="#4F4F4F"
-                        android:textColor="@color/colorPrimary"
                         android:fontFamily="@font/museo_sans_cyrl_500"
+                        android:hint="Дополнительная информация"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="#4F4F4F"
                         android:textSize="16sp" />
 
                     <View
@@ -657,6 +674,53 @@
                         android:background="@color/colorGray" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rank_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/checked" />
+
+                <TextView
+                    android:id="@+id/response_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="5 откликов"
+                    android:textColor="#373A4D"
+                    android:textSize="17sp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/eye" />
+
+                <TextView
+                    android:id="@+id/view_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/museo_sans_cyrl_500"
+                    android:text="44"
+                    android:textColor="#373A4D"
+                    android:textSize="17sp"
+                    android:visibility="visible" />
 
             </LinearLayout>
 
@@ -685,38 +749,38 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textSize="16sp"
                         android:fontFamily="@font/museo_sans_cyrl_500"
-                        android:textColor="#4F4F4F"
                         android:text="Ваше предложение"
-                        android:visibility="visible"/>
+                        android:textColor="#4F4F4F"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/offer_amount_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal|bottom"
                         android:background="#F2F2F2"
+                        android:gravity="center_horizontal|bottom"
+                        android:orientation="horizontal"
                         android:visibility="gone">
 
                         <TextView
                             android:id="@+id/offer_amount_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="45sp"
-                            android:fontFamily="@font/museo_sans_cyrl_300"
-                            android:textColor="#313C65"
                             android:layout_marginRight="16dp"
-                            android:text="200"/>
+                            android:fontFamily="@font/museo_sans_cyrl_300"
+                            android:text="200"
+                            android:textColor="#313C65"
+                            android:textSize="45sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="24sp"
                             android:fontFamily="@font/museo_sans_cyrl_300"
+                            android:text="₽/час"
                             android:textColor="#313C65"
-                            android:text="₽/час"/>
+                            android:textSize="24sp" />
 
                     </LinearLayout>
 
@@ -729,6 +793,7 @@
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/publish_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -739,10 +804,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:fontFamily="@font/museo_sans_cyrl_700"
             android:text="Опубликовать"
             android:textAllCaps="true"
             android:textColor="@color/colorWhite"
-            android:fontFamily="@font/museo_sans_cyrl_700"
             android:textSize="18sp" />
 
     </LinearLayout>

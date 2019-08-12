@@ -33,19 +33,21 @@ public class NewEventActivity extends AppCompatActivity {
 
     private int grayLight, yellow;
 
-    private LinearLayout formOptionContainer, form1Container, form2Container, form3Container;
+    private LinearLayout formOptionContainer, form1Container, form2Container, form3Container, publishLayout;
     private TextView formOptionText, form1Text, form2Text, form3Text;
     private View form1Line, form2Line, form3Line;
     private SwitchButton licenceSwitch, weaponSwitch, carSwitch;
     private LinearLayout weaponContainer, weapon1Container, weapon2Container, offerLayout, offerAmountLayout;
     private TextView weapon1Text, weapon2Text, selectedWeaponText, offerAmountText;
     private View weapon1Line, weapon2Line;
-    private LinearLayout carContainer, car1Container, car2Container, car3Container;
-    private TextView car1Text, car2Text, car3Text, selectedCarText;
+    private LinearLayout carContainer, car1Container, car2Container, car3Container, rankLayout;
+    private TextView car1Text, car2Text, car3Text, selectedCarText, licenceText, responseText, viewText;
     private View car1Line, car2Line, car3Line;
-    private AppCompatEditText startTimeInput, endTimeInput;
+    private AppCompatEditText startTimeInput, endTimeInput, addressInput, additionalInput;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM, EEEE HH:mm", new Locale("ru", "RU"));
+
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class NewEventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getSupportActionBar().setTitle("Охрана жилья");
+
+        id = getIntent().getStringExtra("id");
 
         formOptionContainer = findViewById(R.id.form_option_container);
         form1Container = findViewById(R.id.form_1_container);
@@ -99,6 +103,7 @@ public class NewEventActivity extends AppCompatActivity {
         car2Line = findViewById(R.id.car_2_line);
         car3Line = findViewById(R.id.car_3_line);
         selectedCarText = findViewById(R.id.selected_car_text);
+        licenceText = findViewById(R.id.licence_text);
 
         offerLayout = findViewById(R.id.offer_layout);
         offerAmountLayout = findViewById(R.id.offer_amount_layout);
@@ -106,73 +111,108 @@ public class NewEventActivity extends AppCompatActivity {
 
         startTimeInput = findViewById(R.id.start_time_input);
         endTimeInput = findViewById(R.id.end_time_input);
+        addressInput = findViewById(R.id.address_input);
+        additionalInput = findViewById(R.id.additional_input);
+        responseText = findViewById(R.id.response_text);
+        viewText = findViewById(R.id.view_text);
+        publishLayout = findViewById(R.id.publish_layout);
+        rankLayout = findViewById(R.id.rank_layout);
 
-        formOptionText.setOnClickListener(v -> {
-            formOptionContainer.setVisibility(View.VISIBLE);
-        });
+        if (id == null) {
+            formOptionText.setOnClickListener(v -> {
+                formOptionContainer.setVisibility(View.VISIBLE);
+            });
 
-        form1Container.setOnClickListener(v -> setFormOption(1));
-        form2Container.setOnClickListener(v -> setFormOption(2));
-        form3Container.setOnClickListener(v -> setFormOption(3));
+            form1Container.setOnClickListener(v -> setFormOption(1));
+            form2Container.setOnClickListener(v -> setFormOption(2));
+            form3Container.setOnClickListener(v -> setFormOption(3));
 
-        weaponSwitch.setOnCheckedChangeListener((view, isChecked) -> {
-            weaponContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            if (!isChecked) {
-                selectedWeaponText.setVisibility(View.INVISIBLE);
-            }
-        });
+            weaponSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+                weaponContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                if (!isChecked) {
+                    selectedWeaponText.setVisibility(View.INVISIBLE);
+                }
+            });
 
-        selectedWeaponText.setOnClickListener(v -> {
-            weaponContainer.setVisibility(View.VISIBLE);
-        });
-        weapon1Container.setOnClickListener(v -> setWeaponOption(1));
-        weapon2Container.setOnClickListener(v -> setWeaponOption(2));
+            selectedWeaponText.setOnClickListener(v -> {
+                weaponContainer.setVisibility(View.VISIBLE);
+            });
+            weapon1Container.setOnClickListener(v -> setWeaponOption(1));
+            weapon2Container.setOnClickListener(v -> setWeaponOption(2));
 
-        carSwitch.setOnCheckedChangeListener((view, isChecked) -> {
-            carContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            if (!isChecked) {
-                selectedCarText.setVisibility(View.INVISIBLE);
-            }
-        });
+            carSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+                carContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                if (!isChecked) {
+                    selectedCarText.setVisibility(View.INVISIBLE);
+                }
+            });
 
-        selectedCarText.setOnClickListener(v -> {
-            carContainer.setVisibility(View.VISIBLE);
-        });
-        car1Container.setOnClickListener(v -> setCarOption(1));
-        car2Container.setOnClickListener(v -> setCarOption(2));
-        car3Container.setOnClickListener(v -> setCarOption(3));
+            selectedCarText.setOnClickListener(v -> {
+                carContainer.setVisibility(View.VISIBLE);
+            });
+            car1Container.setOnClickListener(v -> setCarOption(1));
+            car2Container.setOnClickListener(v -> setCarOption(2));
+            car3Container.setOnClickListener(v -> setCarOption(3));
 
-        startTimeInput.setOnClickListener(v -> {
-            new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
-                    .bottomSheet()
-                    .curved()
-                    .mainColor(Color.BLACK)
-                    .customLocale(new Locale("ru", "RU"))
-                    .minDateRange(new Date())
-                    .title("Начало смены")
-                    .listener(date -> {
-                        startTimeInput.setText("Начало смены - " + dateFormat.format(date));
-                    })
-                    .display();
-        });
+            startTimeInput.setOnClickListener(v -> {
+                new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
+                        .bottomSheet()
+                        .curved()
+                        .mainColor(Color.BLACK)
+                        .customLocale(new Locale("ru", "RU"))
+                        .minDateRange(new Date())
+                        .title("Начало смены")
+                        .listener(date -> {
+                            startTimeInput.setText("Начало смены - " + dateFormat.format(date));
+                        })
+                        .display();
+            });
 
-        endTimeInput.setOnClickListener(v -> {
-            new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
-                    .bottomSheet()
-                    .curved()
-                    .mainColor(Color.BLACK)
-                    .customLocale(new Locale("ru", "RU"))
-                    .minDateRange(new Date())
-                    .title("Конец смены")
-                    .listener(date -> {
-                        endTimeInput.setText("Конец смены - " + dateFormat.format(date));
-                    })
-                    .display();
-        });
+            endTimeInput.setOnClickListener(v -> {
+                new SingleDateAndTimePickerDialog.Builder(NewEventActivity.this)
+                        .bottomSheet()
+                        .curved()
+                        .mainColor(Color.BLACK)
+                        .customLocale(new Locale("ru", "RU"))
+                        .minDateRange(new Date())
+                        .title("Конец смены")
+                        .listener(date -> {
+                            endTimeInput.setText("Конец смены - " + dateFormat.format(date));
+                        })
+                        .display();
+            });
 
-        offerLayout.setOnClickListener(v -> {
-            startActivityForResult(new Intent(NewEventActivity.this, OfferActivity.class), 1111);
-        });
+            offerLayout.setOnClickListener(v -> {
+                startActivityForResult(new Intent(NewEventActivity.this, OfferActivity.class), 1111);
+            });
+        } else {
+            licenceSwitch.setVisibility(View.GONE);
+            carSwitch.setVisibility(View.GONE);
+            weaponSwitch.setVisibility(View.GONE);
+            licenceText.setVisibility(View.VISIBLE);
+            selectedCarText.setVisibility(View.VISIBLE);
+            selectedWeaponText.setVisibility(View.VISIBLE);
+            formOptionText.setText("Камуфляж");
+            licenceText.setText("Нет");
+            selectedWeaponText.setText("Травматическое");
+            selectedCarText.setText("Нет");
+
+            addressInput.setEnabled(false);
+            startTimeInput.setEnabled(false);
+            endTimeInput.setEnabled(false);
+            additionalInput.setEnabled(false);
+            addressInput.setText("Московская область, д. Жуковка, д.50");
+            startTimeInput.setText("Начало смены 9 сентября, среда 10:00");
+            endTimeInput.setText("Конец смены 12 сентября, среда 10:00");
+            responseText.setText("6 откликов");
+            viewText.setText("46");
+
+            offerAmountText.setText("250");
+            offerAmountLayout.setVisibility(View.VISIBLE);
+
+            rankLayout.setVisibility(View.VISIBLE);
+            publishLayout.setVisibility(View.GONE);
+        }
 
     }
 
