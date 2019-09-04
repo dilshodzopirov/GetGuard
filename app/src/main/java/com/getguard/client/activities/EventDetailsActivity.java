@@ -116,7 +116,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void getEvent() {
-        NetworkManager.getInstance().getEvent(Config.TOKEN, id, (errorMessage, data) -> {
+        NetworkManager.getInstance(this).getEvent(Config.TOKEN, id, (errorMessage, data) -> {
             if (errorMessage != null) {
                 showError(errorMessage);
             }

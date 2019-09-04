@@ -110,7 +110,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
     private void getEventTypes() {
         showProgress();
         if (Consts.eventTypeMap.size() == 0) {
-            NetworkManager.getInstance().getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
+            NetworkManager.getInstance(this).getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
                 if (errorMessage != null) {
                     showError(errorMessage);
                 }

@@ -5,6 +5,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -22,10 +23,14 @@ import com.getguard.client.R;
 import com.getguard.client.adapters.OfertaAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
+import com.getguard.client.models.network.Register;
+import com.getguard.client.models.network.SmsPhoneVerify;
+import com.getguard.client.network.NetworkManager;
+import com.getguard.client.utils.BiConsumer;
+import com.getguard.client.utils.UIUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
     private ViewState viewState = ViewState.phone;
     private CountDownTimer timer;
     private UserType userType = UserType.client;
+    private ProgressDialog progressDialog;
+    private Register.RegisterData data;
+    private boolean isLoading = false;
 
     private enum ViewState {
         phone, sms, form, oferta
@@ -58,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Подождите...");
 
         white = getResources().getColor(R.color.colorWhite);
         yellow = getResources().getColor(R.color.colorYellow);
@@ -84,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         continueBtn.setOnClickListener(v -> {
             Log.d("test", phoneInput.getText().toString() + " : " + phoneInput.getRawText());
             closeKeyboard();
-            updateViewState(ViewState.sms);
+            smsPhoneVerify();
         });
 
         formContinueBtn.setOnClickListener(v -> {
@@ -125,12 +136,17 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.length() >= 4) {
+                if (editable.length() >= 4 && !isLoading) {
                     closeKeyboard();
-                    updateViewState(userType == UserType.client ? ViewState.form : ViewState.oferta);
+                    register();
                 }
                 Log.d(TAG, "afterTextChanged: " + editable.length());
             }
+        });
+
+        sendSmsText.setOnClickListener(v -> {
+            codeInput.setText("");
+            smsPhoneVerify();
         });
 
         editNumberText.setOnClickListener(v -> {
@@ -139,9 +155,9 @@ public class LoginActivity extends AppCompatActivity {
 
         acceptContainer.setOnClickListener(v -> {
             User user = new User();
-            user.setFirstName("Dilshod");
-            user.setLastName("Zopirov");
-            user.setEmail("dilshdzopirov@gmail.com");
+            user.setToken(data.getToken());
+            user.setFirstName(data.getUser().getUserName());
+            user.setEmail(data.getUser().getEmail());
             AppDatabase.getInstance(LoginActivity.this).getUserDAO().insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -235,6 +251,50 @@ public class LoginActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void smsPhoneVerify() {
+        progressDialog.show();
+        String phone = phoneInput.getText().toString();
+        phone = phone.replaceAll(" ", "");
+        phone = phone.replaceAll("-", "");
+        int role = userType == UserType.client ? 1 : 2;
+        NetworkManager.getInstance(this).smsPhoneVerify(phone, role, (error, smsPhoneVerify) -> {
+            progressDialog.dismiss();
+            if (error != null) {
+                UIUtils.showError(this, null, error);
+            }
+
+            if (smsPhoneVerify != null) {
+                if (smsPhoneVerify.getErrorMessage() != null) {
+                    UIUtils.showError(this, null, smsPhoneVerify.getErrorMessage()[0]);
+                } else {
+                    updateViewState(ViewState.sms);
+                }
+            }
+        });
+    }
+
+    private void register() {
+        isLoading = true;
+        progressDialog.show();
+        String code = codeInput.getText().toString();
+        NetworkManager.getInstance(this).register(code, (error, registerResponse) -> {
+            isLoading = false;
+            progressDialog.dismiss();
+            if (error != null) {
+                UIUtils.showError(this, null, error);
+            }
+
+            if (registerResponse != null) {
+                if (registerResponse.getErrorMessage() != null) {
+                    UIUtils.showError(this, null, registerResponse.getErrorMessage()[0]);
+                } else {
+                    data = registerResponse.getData();
+                    updateViewState(userType == UserType.client ? ViewState.form : ViewState.oferta);
+                }
+            }
+        });
     }
 
 }

@@ -129,7 +129,7 @@ public class EventsFragment extends Fragment {
     private void getEventTypes() {
         showProgress();
         if (Consts.eventTypeMap.size() == 0) {
-            NetworkManager.getInstance().getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
+            NetworkManager.getInstance(getActivity()).getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
                 if (errorMessage != null) {
                     showError(errorMessage);
                 }
@@ -148,7 +148,7 @@ public class EventsFragment extends Fragment {
     }
 
     private void getEvents() {
-        NetworkManager.getInstance().getEvents(Config.TOKEN, filter, (errorMessage, events) -> {
+        NetworkManager.getInstance(getActivity()).getEvents(Config.TOKEN, filter, (errorMessage, events) -> {
             if (errorMessage != null) {
                 showError(errorMessage);
             }

@@ -1,9 +1,16 @@
 package com.getguard.client.network;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.getguard.client.models.network.EventResponse;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
+import com.getguard.client.models.network.Register;
+import com.getguard.client.models.network.SmsPhoneVerify;
 import com.getguard.client.utils.BiConsumer;
+import com.getguard.client.utils.NetworkUtils;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -20,12 +27,79 @@ public class NetworkManager {
     private static NetworkManager instance;
     private static APIService apiService;
 
-    public static NetworkManager getInstance() {
+    public static NetworkManager getInstance(Context context) {
         if (instance == null) {
             apiService = RetrofitClient.getInstance();
-            instance = new NetworkManager();
+            instance = new NetworkManager(context);
         }
         return instance;
+    }
+
+    private Context context;
+    private NetworkManager(Context context) {
+        this.context = context;
+    }
+
+    public void smsPhoneVerify(String phone, int role, final BiConsumer<String, SmsPhoneVerify> consumer) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("phoneNumber", phone);
+        jsonObject.addProperty("role", role);
+        apiService.smsPhoneVerify(jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SmsPhoneVerify>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(SmsPhoneVerify response) {
+                        consumer.accept(null, response);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public void register(String code, final BiConsumer<String, Register> consumer) {
+        JsonObject jsonObject = new JsonObject();
+        Log.d("mana", "register: "+code);
+        jsonObject.addProperty("smsCode", code);
+        apiService.register(jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Register>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Register response) {
+                        consumer.accept(null, response);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     public void getEventTypes(String token, final BiConsumer<String, ArrayList<EventType>> consumer) {
@@ -45,7 +119,7 @@ public class NetworkManager {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        consumer.accept("No internet", null);
+                        consumer.accept(getErrorMessage(throwable), null);
                     }
 
                     @Override
@@ -77,7 +151,7 @@ public class NetworkManager {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        consumer.accept("No internet", null);
+                        consumer.accept(getErrorMessage(throwable), null);
                     }
 
                     @Override
@@ -109,7 +183,7 @@ public class NetworkManager {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        consumer.accept("No internet", null);
+                        consumer.accept(getErrorMessage(throwable), null);
                     }
 
                     @Override
@@ -118,6 +192,14 @@ public class NetworkManager {
                     }
                 });
 
+    }
+
+    private String getErrorMessage(Throwable throwable) {
+        if (NetworkUtils.isNetworkConnected(context)) {
+            return "Что пошло не так";
+        } else {
+            return "Отсутствует соединение с интернетом";
+        }
     }
 
 }

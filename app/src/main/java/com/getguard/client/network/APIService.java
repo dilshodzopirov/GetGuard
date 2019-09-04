@@ -3,11 +3,15 @@ package com.getguard.client.network;
 import com.getguard.client.models.network.EventResponse;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
+import com.getguard.client.models.network.Register;
+import com.getguard.client.models.network.SmsPhoneVerify;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -18,6 +22,20 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface APIService {
+
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @POST("/api/auth/smsphoneverify")
+    Observable<SmsPhoneVerify> smsPhoneVerify(@Body JsonObject body);
+
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @POST("/api/auth/register")
+    Observable<Register> register(@Body JsonObject body);
 
     @Headers({"Content-Type: application/json-patch+json"})
     @GET("api/event/list")
