@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Register.RegisterData data;
     private boolean isLoading = false;
+    private String smsPhoneVerifyToken = "";
 
     private enum ViewState {
         phone, sms, form, oferta
@@ -155,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
 
         acceptContainer.setOnClickListener(v -> {
             User user = new User();
-            user.setToken(data.getToken());
+            user.setToken("Bearer " + data.getToken());
             user.setFirstName(data.getUser().getUserName());
             user.setEmail(data.getUser().getEmail());
             AppDatabase.getInstance(LoginActivity.this).getUserDAO().insert(user);
@@ -269,6 +270,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (smsPhoneVerify.getErrorMessage() != null) {
                     UIUtils.showError(this, null, smsPhoneVerify.getErrorMessage()[0]);
                 } else {
+                    smsPhoneVerifyToken = smsPhoneVerify.getData().getToken();
                     updateViewState(ViewState.sms);
                 }
             }
@@ -279,7 +281,7 @@ public class LoginActivity extends AppCompatActivity {
         isLoading = true;
         progressDialog.show();
         String code = codeInput.getText().toString();
-        NetworkManager.getInstance(this).register(code, (error, registerResponse) -> {
+        NetworkManager.getInstance(this).register(code, smsPhoneVerifyToken, (error, registerResponse) -> {
             isLoading = false;
             progressDialog.dismiss();
             if (error != null) {

@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.getguard.client.R;
 import com.getguard.client.adapters.GuardTypeAdapter;
+import com.getguard.client.database.AppDatabase;
+import com.getguard.client.database.User;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
 import com.getguard.client.utils.Config;
@@ -33,6 +35,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
     private Button errorBtn;
 
     private GuardTypeAdapter adapter;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class SelectEventTypeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getSupportActionBar().setTitle("Выберите тип охраны");
+
+        user = AppDatabase.getInstance(this).getUserDAO().getUser();
 
         recyclerView = findViewById(R.id.recycler_view);
         progressBar = findViewById(R.id.progress_bar);
@@ -110,7 +115,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
     private void getEventTypes() {
         showProgress();
         if (Consts.eventTypeMap.size() == 0) {
-            NetworkManager.getInstance(this).getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
+            NetworkManager.getInstance(this).getEventTypes(user.getToken(), (errorMessage, eventTypes) -> {
                 if (errorMessage != null) {
                     showError(errorMessage);
                 }

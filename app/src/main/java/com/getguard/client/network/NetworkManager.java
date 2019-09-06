@@ -71,10 +71,10 @@ public class NetworkManager {
 
     }
 
-    public void register(String code, final BiConsumer<String, Register> consumer) {
+    public void register(String code, String token, final BiConsumer<String, Register> consumer) {
         JsonObject jsonObject = new JsonObject();
-        Log.d("mana", "register: "+code);
         jsonObject.addProperty("smsCode", code);
+        jsonObject.addProperty("Token", token);
         apiService.register(jsonObject)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

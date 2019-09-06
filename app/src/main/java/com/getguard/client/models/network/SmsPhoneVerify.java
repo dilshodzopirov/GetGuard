@@ -3,13 +3,22 @@ package com.getguard.client.models.network;
 public class SmsPhoneVerify {
 
     String[] errorMessage;
-    String data;
+    SmsPhoneData data;
 
     public String[] getErrorMessage() {
         return errorMessage;
     }
 
-    public String getData() {
+    public SmsPhoneData getData() {
         return data;
     }
+
+    public class SmsPhoneData {
+        String token;
+
+        public String getToken() {
+            return token;
+        }
+    }
+
 }

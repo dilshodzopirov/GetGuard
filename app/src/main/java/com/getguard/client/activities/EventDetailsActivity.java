@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.getguard.client.R;
+import com.getguard.client.database.AppDatabase;
+import com.getguard.client.database.User;
 import com.getguard.client.models.network.EventResponse;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
@@ -39,6 +41,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private String id;
     private EventResponse.Data data;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        user = AppDatabase.getInstance(this).getUserDAO().getUser();
 
         id = getIntent().getStringExtra("id");
 
@@ -116,7 +121,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void getEvent() {
-        NetworkManager.getInstance(this).getEvent(Config.TOKEN, id, (errorMessage, data) -> {
+        NetworkManager.getInstance(this).getEvent(user.getToken(), id, (errorMessage, data) -> {
             if (errorMessage != null) {
                 showError(errorMessage);
             }

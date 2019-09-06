@@ -19,6 +19,8 @@ import com.getguard.client.R;
 import com.getguard.client.activities.EventDetailsActivity;
 import com.getguard.client.activities.NewEventActivity;
 import com.getguard.client.adapters.GuardAdapter;
+import com.getguard.client.database.AppDatabase;
+import com.getguard.client.database.User;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
 import com.getguard.client.utils.Config;
@@ -33,6 +35,7 @@ public class EventsFragment extends Fragment {
     private LinearLayout errorContainer;
     private TextView errorText, emptyText;
     private Button errorBtn;
+    private User user;
 
     private GuardAdapter adapter;
 
@@ -54,6 +57,7 @@ public class EventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         filter = getArguments().getInt("filter");
+        user = AppDatabase.getInstance(getActivity()).getUserDAO().getUser();
     }
 
     @Override
@@ -129,7 +133,7 @@ public class EventsFragment extends Fragment {
     private void getEventTypes() {
         showProgress();
         if (Consts.eventTypeMap.size() == 0) {
-            NetworkManager.getInstance(getActivity()).getEventTypes(Config.TOKEN, (errorMessage, eventTypes) -> {
+            NetworkManager.getInstance(getActivity()).getEventTypes(user.getToken(), (errorMessage, eventTypes) -> {
                 if (errorMessage != null) {
                     showError(errorMessage);
                 }
@@ -148,7 +152,7 @@ public class EventsFragment extends Fragment {
     }
 
     private void getEvents() {
-        NetworkManager.getInstance(getActivity()).getEvents(Config.TOKEN, filter, (errorMessage, events) -> {
+        NetworkManager.getInstance(getActivity()).getEvents(user.getToken(), filter, (errorMessage, events) -> {
             if (errorMessage != null) {
                 showError(errorMessage);
             }
