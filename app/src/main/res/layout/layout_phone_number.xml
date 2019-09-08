@@ -121,10 +121,8 @@
         android:imeOptions="actionDone"
         mask:allowed_chars="1234567890"
         mask:keep_hint="false"
-        mask:mask="+998 ## ###-##-##"
+        mask:mask="+7 ### ###-##-##"
         />
-
-    <!--mask:mask="+7 ### ##-##-##"-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/continue_btn"

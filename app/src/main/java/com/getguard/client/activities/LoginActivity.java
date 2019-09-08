@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                continueBtn.setVisibility(editable.length() > 14 ? View.VISIBLE : View.GONE);
+                continueBtn.setVisibility(editable.length() > 15 ? View.VISIBLE : View.GONE);
                 Log.d(TAG, "afterTextChanged: " + editable.length());
             }
         });
