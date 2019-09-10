@@ -11,14 +11,29 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.getguard.client.R;
+import com.getguard.client.database.AppDatabase;
+import com.getguard.client.database.User;
+import com.getguard.client.models.network.EventResponse;
+import com.getguard.client.models.network.EventType;
+import com.getguard.client.network.NetworkManager;
+import com.getguard.client.utils.Config;
+import com.getguard.client.utils.Consts;
+import com.getguard.client.utils.Utils;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.suke.widget.SwitchButton;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +48,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private int grayLight, yellow;
 
-    private LinearLayout formOptionContainer, form1Container, form2Container, form3Container, publishLayout;
+    private LinearLayout contentLayout, formOptionContainer, form1Container, form2Container, form3Container, publishLayout;
     private TextView formOptionText, form1Text, form2Text, form3Text;
     private View form1Line, form2Line, form3Line;
     private SwitchButton licenceSwitch, weaponSwitch, carSwitch;
@@ -45,9 +60,16 @@ public class NewEventActivity extends AppCompatActivity {
     private View car1Line, car2Line, car3Line;
     private AppCompatEditText startTimeInput, endTimeInput, addressInput, additionalInput;
 
+    private ProgressBar progressBar;
+    private LinearLayout errorContainer;
+    private TextView errorText, emptyText;
+    private Button errorBtn;
+
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM, EEEE HH:mm", new Locale("ru", "RU"));
 
+    private User user;
     private String id;
+    private EventResponse.Data data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +82,8 @@ public class NewEventActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        user = AppDatabase.getInstance(this).getUserDAO().getUser();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -67,6 +91,7 @@ public class NewEventActivity extends AppCompatActivity {
 
         id = getIntent().getStringExtra("id");
 
+        contentLayout = findViewById(R.id.content_layout);
         formOptionContainer = findViewById(R.id.form_option_container);
         form1Container = findViewById(R.id.form_1_container);
         form2Container = findViewById(R.id.form_2_container);
@@ -118,7 +143,12 @@ public class NewEventActivity extends AppCompatActivity {
         publishLayout = findViewById(R.id.publish_layout);
         rankLayout = findViewById(R.id.rank_layout);
 
-        if (id == null) {
+        progressBar = findViewById(R.id.progress_bar);
+        errorContainer = findViewById(R.id.error_container);
+        errorText = findViewById(R.id.error_text);
+        errorBtn = findViewById(R.id.error_btn);
+
+        if (id == null && data == null) {
             formOptionText.setOnClickListener(v -> {
                 formOptionContainer.setVisibility(View.VISIBLE);
             });
@@ -192,26 +222,35 @@ public class NewEventActivity extends AppCompatActivity {
             licenceText.setVisibility(View.VISIBLE);
             selectedCarText.setVisibility(View.VISIBLE);
             selectedWeaponText.setVisibility(View.VISIBLE);
-            formOptionText.setText("Камуфляж");
-            licenceText.setText("Нет");
-            selectedWeaponText.setText("Травматическое");
-            selectedCarText.setText("Нет");
-
-            addressInput.setEnabled(false);
-            startTimeInput.setEnabled(false);
-            endTimeInput.setEnabled(false);
-            additionalInput.setEnabled(false);
-            addressInput.setText("Московская область, д. Жуковка, д.50");
-            startTimeInput.setText("Начало смены 9 сентября, среда 10:00");
-            endTimeInput.setText("Конец смены 12 сентября, среда 10:00");
-            responseText.setText("6 откликов");
-            viewText.setText("46");
-
-            offerAmountText.setText("250");
             offerAmountLayout.setVisibility(View.VISIBLE);
 
             rankLayout.setVisibility(View.VISIBLE);
             publishLayout.setVisibility(View.GONE);
+
+//            formOptionText.setText("Камуфляж");
+//            licenceText.setText("Нет");
+//            selectedWeaponText.setText("Травматическое");
+//            selectedCarText.setText("Нет");
+//
+//            addressInput.setEnabled(false);
+//            startTimeInput.setEnabled(false);
+//            endTimeInput.setEnabled(false);
+//            additionalInput.setEnabled(false);
+//            addressInput.setText("Московская область, д. Жуковка, д.50");
+//            startTimeInput.setText("Начало смены 9 сентября, среда 10:00");
+//            endTimeInput.setText("Конец смены 12 сентября, среда 10:00");
+//            responseText.setText("6 откликов");
+//            viewText.setText("46");
+//
+//            offerAmountText.setText("250");
+        }
+
+        errorBtn.setOnClickListener(v -> {
+            getEvent();
+        });
+
+        if (id != null) {
+            getEvent();
         }
 
     }
@@ -369,6 +408,93 @@ public class NewEventActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void showContent() {
+        contentLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        errorContainer.setVisibility(View.GONE);
+    }
+
+    private void showProgress() {
+        contentLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        errorContainer.setVisibility(View.GONE);
+    }
+
+    private void showError(String message) {
+        contentLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        errorContainer.setVisibility(View.VISIBLE);
+        if (message != null) {
+            errorText.setText(message);
+        }
+    }
+
+    private void setDataToUI() {
+
+        switch (data.getDressCode()) {
+            case 0:
+                formOptionText.setText(form1Text.getText());
+            case 1:
+                formOptionText.setText(form2Text.getText());
+            case 2:
+                formOptionText.setText(form3Text.getText());
+        }
+        licenceText.setText(data.getHasPrivateGuardLicense() ? "Да" : "Нет");
+        switch (data.getWeapon()) {
+            case 0:
+                selectedWeaponText.setText(weapon1Text.getText());
+            case 1:
+                selectedWeaponText.setText(weapon2Text.getText());
+        }
+        switch (data.getPersonalCar()) {
+            case 0:
+                selectedCarText.setText(car1Text.getText());
+            case 1:
+                selectedCarText.setText(car2Text.getText());
+            case 2:
+                selectedCarText.setText(car3Text.getText());
+        }
+
+        addressInput.setText(data.getAddress());
+        startTimeInput.setText("Начало смены " + formatDate(data.getJobStartTime()));
+        endTimeInput.setText("Конец смены " + formatDate(data.getGuardJobEndTime()));
+        responseText.setText("6 откликов");
+        viewText.setText("46");
+
+        offerAmountText.setText(String.valueOf(data.getRatePrice()));
+
+    }
+
+    private void getEvent() {
+        showProgress();
+        NetworkManager.getInstance(this).getEvent(user.getToken(), id, (errorMessage, data) -> {
+            if (errorMessage != null) {
+                showError(errorMessage);
+            }
+
+            if (data != null) {
+                this.data = data;
+                setDataToUI();
+                showContent();
+
+            }
+        });
+    }
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", new Locale("ru"));
+    SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMMM, EEEEE HH:mm", new Locale("ru"));
+
+    private String formatDate(String dateStr) {
+        if (dateStr == null) return "";
+        try {
+            Date date = simpleDateFormat.parse(dateStr);
+            return displayFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

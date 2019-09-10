@@ -16,12 +16,13 @@
         android:src="@drawable/rectangle"/>
 
     <TextView
+        android:id="@+id/username_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginLeft="16dp"
         android:textSize="18sp"
         android:textColor="#4F4F4F"
-        android:text="Петров Александр Петрович"/>
+        android:text="---"/>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.getguard.client.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +10,19 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.getguard.client.R;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
@@ -24,7 +32,10 @@ import com.getguard.client.fragments.MainFragment;
 import com.getguard.client.fragments.OfertaFragment;
 import com.getguard.client.fragments.ProfileFragment;
 import com.getguard.client.fragments.SettingsFragment;
+import com.getguard.client.utils.Config;
 import com.google.android.material.navigation.NavigationView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -119,6 +130,15 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Профиль");
             titleText.setVisibility(View.GONE);
         });
+
+        CircleImageView imageView = headerLayout.findViewById(R.id.profile_image);
+        TextView userNameText = headerLayout.findViewById(R.id.username_text);
+
+        userNameText.setText(user.getFirstName());
+        Glide.with(this)
+                .load(Config.BASE_URL + "")
+                .apply(new RequestOptions().centerCrop())
+                .into(imageView);
 
     }
 

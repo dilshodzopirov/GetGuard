@@ -5,6 +5,7 @@ import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
 import com.getguard.client.models.network.Register;
 import com.getguard.client.models.network.SmsPhoneVerify;
+import com.getguard.client.models.network.UserByIdResponse;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -49,40 +50,9 @@ public interface APIService {
     @GET("api/event/{id}")
     Observable<EventResponse> getEvent(@Header("Authorization") String token, @Path("id") String id);
 
-    @Headers({"Content-Type: application/json", "X-Requested-With: XMLHttpRequest"})
-    @GET("/api/data/category")
-    Observable<ArrayList<Object>> getCategories(@Query("lang") String lang);
+    @Headers({"Content-Type: application/json-patch+json"})
+    @GET("/api/User/{id}")
+    Observable<UserByIdResponse> getUser(@Header("Authorization") String token, @Path("id") String id);
 
-    @Headers("Content-Type: application/x-www-form-urlencoded")
-    @FormUrlEncoded
-    @POST("/api/perform/prixodstatus")
-    Observable<Object> incomeAction(@Header("AccessToken") String token,
-                                    @Field("method") String method,
-                                    @Field("id") int id);
-
-    @Headers("Content-Type: application/x-www-form-urlencoded")
-    @FormUrlEncoded
-    @POST("/api/auth/signup")
-    Single<Object> signUp(@Field("name") String name,
-                          @Field("username") String username,
-                          @Field("email") String email,
-                          @Field("phone") String phone,
-                          @Field("password") String pass);
-
-    @Headers("Content-Type: application/x-www-form-urlencoded")
-    @FormUrlEncoded
-    @POST("api/auth/login")
-    Single<Object> signIn(@Field("phone") String phoneNumber,
-                                  @Field("password") String password);
-
-    @Headers({"Content-Type: application/x-www-form-urlencoded"})
-    @FormUrlEncoded
-    @POST("api/auth/smsverify")
-    Single<Object> smsVerify(@Field("phone") String phone,
-                                     @Field("vercode") String code);
-
-    @Headers({"Content-Type: application/json", "X-Requested-With: XMLHttpRequest"})
-    @GET("api/auth/sendsmsver")
-    Single<Object> sendSmsVer(@Header("Authorization") String token);
 
 }

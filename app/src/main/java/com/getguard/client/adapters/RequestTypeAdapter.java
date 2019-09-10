@@ -25,18 +25,18 @@ import com.getguard.client.utils.Utils;
 
 import java.util.ArrayList;
 
-public class GuardTypeAdapter extends RecyclerView.Adapter<GuardTypeAdapter.ViewHolder> {
+public class RequestTypeAdapter extends RecyclerView.Adapter<RequestTypeAdapter.ViewHolder> {
 
     private Consumer<EventType> listener;
     private ArrayList<EventType> items = new ArrayList<>();
 
-    public GuardTypeAdapter(Consumer<EventType> listener) {
+    public RequestTypeAdapter(Consumer<EventType> listener) {
         this.listener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_guard_type, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_request_type, parent, false);
         return new ViewHolder(v);
     }
 

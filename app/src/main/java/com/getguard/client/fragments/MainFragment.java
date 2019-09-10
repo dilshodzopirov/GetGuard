@@ -13,6 +13,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.getguard.client.R;
 import com.getguard.client.activities.SelectEventTypeActivity;
 import com.getguard.client.adapters.TabAdapter;
+import com.getguard.client.database.AppDatabase;
+import com.getguard.client.database.User;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainFragment extends Fragment {
@@ -22,6 +24,8 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
     private LinearLayout createLayout;
 
+    private User user;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -29,6 +33,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        user = AppDatabase.getInstance(getActivity()).getUserDAO().getUser();
 
     }
 
@@ -50,9 +55,13 @@ public class MainFragment extends Fragment {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        createLayout.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SelectEventTypeActivity.class));
-        });
+        if (user.getRoleType() == 2) {
+            createLayout.setVisibility(View.GONE);
+        } else {
+            createLayout.setOnClickListener(v -> {
+                startActivity(new Intent(getActivity(), SelectEventTypeActivity.class));
+            });
+        }
 
         return view;
     }

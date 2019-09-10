@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/row_guard" />
+                    <include layout="@layout/row_request" />
 
                     <View
                         android:layout_width="match_parent"

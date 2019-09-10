@@ -16,12 +16,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.getguard.client.R;
-import com.getguard.client.adapters.GuardTypeAdapter;
+import com.getguard.client.adapters.RequestTypeAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
-import com.getguard.client.utils.Config;
 import com.getguard.client.utils.Consts;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
     private TextView errorText, emptyText;
     private Button errorBtn;
 
-    private GuardTypeAdapter adapter;
+    private RequestTypeAdapter adapter;
     private User user;
 
     @Override
@@ -63,7 +62,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new GuardTypeAdapter(item -> {
+        adapter = new RequestTypeAdapter(item -> {
             Intent intent = new Intent(SelectEventTypeActivity.this, NewEventActivity.class);
             startActivity(intent);
         });

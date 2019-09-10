@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.getguard.client.R;
 import com.getguard.client.activities.EventDetailsActivity;
+import com.getguard.client.activities.MyRequestActivity;
 import com.getguard.client.activities.NewEventActivity;
-import com.getguard.client.adapters.GuardAdapter;
+import com.getguard.client.adapters.RequestAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.network.NetworkManager;
-import com.getguard.client.utils.Config;
 import com.getguard.client.utils.Consts;
 
 public class EventsFragment extends Fragment {
@@ -37,7 +37,7 @@ public class EventsFragment extends Fragment {
     private Button errorBtn;
     private User user;
 
-    private GuardAdapter adapter;
+    private RequestAdapter adapter;
 
     private int filter = 0;
 
@@ -74,12 +74,16 @@ public class EventsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new GuardAdapter(item -> {
-            if (filter == 1 || filter == 0) {
+        adapter = new RequestAdapter(item -> {
+            if (filter == 0) {
                 Intent intent = new Intent(getActivity(), NewEventActivity.class);
                 intent.putExtra("id", item.getId());
                 startActivity(intent);
-            } else {
+            } else if (filter == 1) {
+                Intent intent = new Intent(getActivity(), MyRequestActivity.class);
+                intent.putExtra("id", item.getId());
+                startActivity(intent);
+            } else if (filter == 2) {
                 Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
                 intent.putExtra("id", item.getId());
                 startActivity(intent);

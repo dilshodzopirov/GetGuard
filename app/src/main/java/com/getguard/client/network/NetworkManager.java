@@ -8,6 +8,7 @@ import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
 import com.getguard.client.models.network.Register;
 import com.getguard.client.models.network.SmsPhoneVerify;
+import com.getguard.client.models.network.UserByIdResponse;
 import com.getguard.client.utils.BiConsumer;
 import com.getguard.client.utils.NetworkUtils;
 import com.google.gson.JsonObject;
@@ -175,7 +176,39 @@ public class NetworkManager {
                     @Override
                     public void onNext(EventResponse response) {
                         if (response.getErrorMessage() != null) {
-                            consumer.accept(response.getErrorMessage(), null);
+                            consumer.accept(response.getErrorMessage().get(0), null);
+                        } else {
+                            consumer.accept(null, response.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public void getUserById(String token, String id, final BiConsumer<String, UserByIdResponse.Data> consumer) {
+        apiService.getUser(token, id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserByIdResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(UserByIdResponse response) {
+                        if (response.getErrorMessage() != null) {
+                            consumer.accept(response.getErrorMessage().get(0), null);
                         } else {
                             consumer.accept(null, response.getData());
                         }

@@ -14,17 +14,19 @@ public class User {
     private String email;
     private long birthDay;
     private String token;
+    private int roleType;
 
     public User() {
     }
 
-    public User(long uid, String firstName, String lastName, String email, long birthDay, String token) {
+    public User(long uid, String firstName, String lastName, String email, long birthDay, String token, int roleType) {
         this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.birthDay = birthDay;
         this.token = token;
+        this.roleType = roleType;
     }
 
     public long getUid() {
@@ -73,5 +75,13 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public int getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(int roleType) {
+        this.roleType = roleType;
     }
 }

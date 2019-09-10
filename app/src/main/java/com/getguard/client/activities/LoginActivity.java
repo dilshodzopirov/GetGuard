@@ -159,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
             user.setToken("Bearer " + data.getToken());
             user.setFirstName(data.getUser().getUserName());
             user.setEmail(data.getUser().getEmail());
+            user.setRoleType(data.getUser().getRoleType());
             AppDatabase.getInstance(LoginActivity.this).getUserDAO().insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
