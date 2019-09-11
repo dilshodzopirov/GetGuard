@@ -156,10 +156,12 @@ public class LoginActivity extends AppCompatActivity {
 
         acceptContainer.setOnClickListener(v -> {
             User user = new User();
+            user.setId(data.getUser().getId());
             user.setToken("Bearer " + data.getToken());
-            user.setFirstName(data.getUser().getUserName());
+            user.setUserName(data.getUser().getUserName());
             user.setEmail(data.getUser().getEmail());
             user.setRoleType(data.getUser().getRoleType());
+            user.setPhotoId(data.getUser().getPhotoId());
             AppDatabase.getInstance(LoginActivity.this).getUserDAO().insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -294,7 +296,7 @@ public class LoginActivity extends AppCompatActivity {
                     UIUtils.showError(this, null, registerResponse.getErrorMessage()[0]);
                 } else {
                     data = registerResponse.getData();
-                    updateViewState(userType == UserType.client ? ViewState.form : ViewState.oferta);
+                    updateViewState(data.getUser().getRoleType() == 1 ? ViewState.form : ViewState.oferta);
                 }
             }
         });

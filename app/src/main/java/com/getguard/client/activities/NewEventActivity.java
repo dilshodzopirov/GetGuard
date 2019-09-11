@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -56,7 +58,7 @@ public class NewEventActivity extends AppCompatActivity {
     private TextView weapon1Text, weapon2Text, selectedWeaponText, offerAmountText;
     private View weapon1Line, weapon2Line;
     private LinearLayout carContainer, car1Container, car2Container, car3Container, rankLayout;
-    private TextView car1Text, car2Text, car3Text, selectedCarText, licenceText, responseText, viewText;
+    private TextView car1Text, car2Text, car3Text, selectedCarText, licenceText, responseText, viewText, publishText;
     private View car1Line, car2Line, car3Line;
     private AppCompatEditText startTimeInput, endTimeInput, addressInput, additionalInput;
 
@@ -64,12 +66,18 @@ public class NewEventActivity extends AppCompatActivity {
     private LinearLayout errorContainer;
     private TextView errorText, emptyText;
     private Button errorBtn;
+    private int dressCode = 0;
+    private int weapon = -1, personalCar = -1;
+    private boolean hasPrivateGuardLicence = false;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM, EEEE HH:mm", new Locale("ru", "RU"));
 
     private User user;
     private String id;
     private EventResponse.Data data;
+    private ProgressDialog progressDialog;
+    private String startTime, endTime;
+    private int eventType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +92,17 @@ public class NewEventActivity extends AppCompatActivity {
 
         user = AppDatabase.getInstance(this).getUserDAO().getUser();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Подождите...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getSupportActionBar().setTitle("Охрана жилья");
 
+        eventType = getIntent().getIntExtra("eventType", 0);
         id = getIntent().getStringExtra("id");
 
         contentLayout = findViewById(R.id.content_layout);
@@ -147,8 +161,10 @@ public class NewEventActivity extends AppCompatActivity {
         errorContainer = findViewById(R.id.error_container);
         errorText = findViewById(R.id.error_text);
         errorBtn = findViewById(R.id.error_btn);
+        publishText = findViewById(R.id.publish_text);
 
         if (id == null && data == null) {
+            showContent();
             formOptionText.setOnClickListener(v -> {
                 formOptionContainer.setVisibility(View.VISIBLE);
             });
@@ -156,6 +172,10 @@ public class NewEventActivity extends AppCompatActivity {
             form1Container.setOnClickListener(v -> setFormOption(1));
             form2Container.setOnClickListener(v -> setFormOption(2));
             form3Container.setOnClickListener(v -> setFormOption(3));
+
+            licenceSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+                hasPrivateGuardLicence = isChecked;
+            });
 
             weaponSwitch.setOnCheckedChangeListener((view, isChecked) -> {
                 weaponContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -194,6 +214,8 @@ public class NewEventActivity extends AppCompatActivity {
                         .title("Начало смены")
                         .listener(date -> {
                             startTimeInput.setText("Начало смены - " + dateFormat.format(date));
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                            startTime = sdf.format(new Date());
                         })
                         .display();
             });
@@ -208,12 +230,20 @@ public class NewEventActivity extends AppCompatActivity {
                         .title("Конец смены")
                         .listener(date -> {
                             endTimeInput.setText("Конец смены - " + dateFormat.format(date));
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                            endTime = sdf.format(new Date());
                         })
                         .display();
             });
 
             offerLayout.setOnClickListener(v -> {
                 startActivityForResult(new Intent(NewEventActivity.this, OfferActivity.class), 1111);
+            });
+
+            publishLayout.setOnClickListener(v -> {
+                if (isValid()) {
+                    createEvent();
+                }
             });
         } else {
             licenceSwitch.setVisibility(View.GONE);
@@ -226,16 +256,24 @@ public class NewEventActivity extends AppCompatActivity {
 
             rankLayout.setVisibility(View.VISIBLE);
             publishLayout.setVisibility(View.GONE);
+            addressInput.setEnabled(false);
+            startTimeInput.setEnabled(false);
+            endTimeInput.setEnabled(false);
+            additionalInput.setEnabled(false);
 
+
+            if (user.getRoleType() != 1) {
+                publishLayout.setVisibility(View.VISIBLE);
+                publishText.setText("Откликнуться");
+                publishLayout.setOnClickListener(v -> {
+                    respond();
+                });
+            }
 //            formOptionText.setText("Камуфляж");
 //            licenceText.setText("Нет");
 //            selectedWeaponText.setText("Травматическое");
 //            selectedCarText.setText("Нет");
 //
-//            addressInput.setEnabled(false);
-//            startTimeInput.setEnabled(false);
-//            endTimeInput.setEnabled(false);
-//            additionalInput.setEnabled(false);
 //            addressInput.setText("Московская область, д. Жуковка, д.50");
 //            startTimeInput.setText("Начало смены 9 сентября, среда 10:00");
 //            endTimeInput.setText("Конец смены 12 сентября, среда 10:00");
@@ -277,6 +315,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private void setFormOption(int option) {
 
+        dressCode = option - 1;
         form1Text.setTextColor(option == 1 ? yellow : grayLight);
         form2Text.setTextColor(option == 2 ? yellow : grayLight);
         form3Text.setTextColor(option == 3 ? yellow : grayLight);
@@ -323,6 +362,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private void setWeaponOption(int option) {
 
+        weapon = option - 1;
         weapon1Text.setTextColor(option == 1 ? yellow : grayLight);
         weapon2Text.setTextColor(option == 2 ? yellow : grayLight);
         weapon1Line.setVisibility(option == 1 ? View.VISIBLE : View.GONE);
@@ -365,6 +405,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private void setCarOption(int option) {
 
+        personalCar = option - 1;
         car1Text.setTextColor(option == 1 ? yellow : grayLight);
         car2Text.setTextColor(option == 2 ? yellow : grayLight);
         car3Text.setTextColor(option == 3 ? yellow : grayLight);
@@ -447,6 +488,8 @@ public class NewEventActivity extends AppCompatActivity {
                 selectedWeaponText.setText(weapon1Text.getText());
             case 1:
                 selectedWeaponText.setText(weapon2Text.getText());
+            default:
+                selectedWeaponText.setText("Нет");
         }
         switch (data.getPersonalCar()) {
             case 0:
@@ -455,12 +498,16 @@ public class NewEventActivity extends AppCompatActivity {
                 selectedCarText.setText(car2Text.getText());
             case 2:
                 selectedCarText.setText(car3Text.getText());
+            default:
+                selectedCarText.setText("Нет");
         }
 
         addressInput.setText(data.getAddress());
         startTimeInput.setText("Начало смены " + formatDate(data.getJobStartTime()));
         endTimeInput.setText("Конец смены " + formatDate(data.getGuardJobEndTime()));
-        responseText.setText("6 откликов");
+
+        int responses = data.getRespondedUsers() != null ? data.getRespondedUsers().size() : 0;
+        responseText.setText(responses + " откликов");
         viewText.setText("46");
 
         offerAmountText.setText(String.valueOf(data.getRatePrice()));
@@ -495,6 +542,84 @@ public class NewEventActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void createEvent() {
+        progressDialog.show();
+        int ratePrice = 0;
+        try {
+            ratePrice = Integer.parseInt(offerAmountText.getText().toString());
+        } catch (NumberFormatException e) {
+
+        }
+        NetworkManager.getInstance(this).createEvent(user.getToken(),
+                addressInput.getText().toString(),
+                addressInput.getText().toString(),
+                startTime,
+                endTime,
+                ratePrice,
+                dressCode,
+                hasPrivateGuardLicence,
+                weapon,
+                null,
+                personalCar,
+                additionalInput.getText().toString(),
+                eventType,
+                (errorMessage, data) -> {
+            progressDialog.dismiss();
+
+            if (errorMessage != null) {
+                Toast.makeText(NewEventActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+
+            if (data != null) {
+                finish();
+            }
+        });
+    }
+
+    private boolean isValid() {
+        if (weapon == -1) {
+            Toast.makeText(this, "Выберите оружию пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (personalCar == -1) {
+            Toast.makeText(this, "Выберите автомобиль пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (addressInput.getText().length() < 1) {
+            Toast.makeText(this, "Введите адрес пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (startTime == null) {
+            Toast.makeText(this, "Введите начало смены пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (endTime == null) {
+            Toast.makeText(this, "Введите конец смены пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (offerAmountText.getText().length() < 1) {
+            Toast.makeText(this, "Введите предложение пожалуйста", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void respond() {
+        progressDialog.show();
+
+        NetworkManager.getInstance(this).respond(user.getToken(), id, (errorMessage, data) -> {
+                    progressDialog.dismiss();
+
+                    if (errorMessage != null) {
+                        Toast.makeText(NewEventActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
+
+                    if (data != null) {
+                        finish();
+                    }
+                });
     }
 
 }

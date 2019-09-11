@@ -3,8 +3,10 @@ package com.getguard.client.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView eventText, addressText, dateText, priceText, nameText, ratingText;
     private ImageView bgImg, guardImg;
     private RatingBar ratingBar;
+    private CardView holder;
 
     private String id;
     private EventResponse.Data data;
@@ -57,7 +60,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         id = getIntent().getStringExtra("id");
 
-        getSupportActionBar().setTitle("Заявка Nº341588");
+        getSupportActionBar().setTitle("Заявка");
 
         contentLayout = findViewById(R.id.content_layout);
         progressBar = findViewById(R.id.progress_bar);
@@ -78,6 +81,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         callContainer = findViewById(R.id.call_container);
         supportContainer = findViewById(R.id.support_container);
         closeContainer = findViewById(R.id.close_container);
+        holder = findViewById(R.id.holder);
+
+        holder.setOnClickListener(v -> {
+            Intent intent = new Intent(EventDetailsActivity.this, NewEventActivity.class);
+            intent.putExtra("id", data.getId());
+            startActivity(intent);
+        });
 
         errorBtn.setOnClickListener(v -> {
             showProgress();
@@ -142,18 +152,32 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 EventResponse.Executor executor = data.getExecutor();
                 if (executor != null) {
+                    if (executor.getPhoto() != null) {
+                        Glide.with(this)
+                                .load(Config.BASE_URL + "api/Upload/" + executor.getPhoto().getId())
+                                .apply(new RequestOptions().centerCrop())
+                                .into(guardImg);
+                    }
                     nameText.setText(executor.getUserName());
                     ratingText.setText(executor.getRating() + ", " + executor.getUserRatingCount() + "Оценки");
                     ratingBar.setRating(executor.getRating());
+
+                    executorContainer.setOnClickListener(v -> {
+                        Intent intent = new Intent(EventDetailsActivity.this, UserDetailsActivity.class);
+                        intent.putExtra("id", executor.getId());
+                        intent.putExtra("eventId", id);
+                        startActivity(intent);
+                    });
+
+                    callContainer.setOnClickListener(v -> {
+//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+//                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
+//                        startActivity(callIntent);
+                    });
+
                 }
                 showContent();
 
-                executorContainer.setOnClickListener(v -> {
-                    Intent intent = new Intent(EventDetailsActivity.this, UserDetailsActivity.class);
-                    intent.putExtra("event_id", data.getId());
-                    intent.putExtra("executor_id", data.getExecutorId());
-                    startActivity(intent);
-                });
 
             }
         });

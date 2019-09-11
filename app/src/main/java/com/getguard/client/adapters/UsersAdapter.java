@@ -31,6 +31,8 @@ import com.getguard.client.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
     private Consumer<EventResponse.RespondedUser> listener;
@@ -56,7 +58,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
             holder.getNameText().setText(item.getUserName());
             Glide.with(holder.itemView.getContext())
-                    .load(Config.BASE_URL + item.getPhotoId())
+                    .load(Config.BASE_URL + "api/Upload/" + item.getPhotoId())
                     .apply(new RequestOptions().centerCrop())
                     .into(holder.getImage());
 
@@ -75,16 +77,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     }
 
     public void setItems(List<EventResponse.RespondedUser> items) {
-        this.items.clear();
-        this.items.addAll(items);
-        notifyDataSetChanged();
+        if (items != null) {
+            this.items.clear();
+            this.items.addAll(items);
+            notifyDataSetChanged();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private RelativeLayout holder;
         private TextView nameText, ratingText;
-        private ImageView image;
+        private CircleImageView image;
         private AppCompatRatingBar ratingBar;
 
         public ViewHolder(View itemView) {
@@ -110,7 +114,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             return ratingText;
         }
 
-        public ImageView getImage() {
+        public CircleImageView getImage() {
             return image;
         }
 

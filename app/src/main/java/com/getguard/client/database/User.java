@@ -9,20 +9,20 @@ public class User {
     @PrimaryKey()
     private long uid;
 
-    private String firstName;
-    private String lastName;
+    private String id;
+    private String userName;
     private String email;
     private long birthDay;
+    private String photoId;
     private String token;
     private int roleType;
 
     public User() {
     }
 
-    public User(long uid, String firstName, String lastName, String email, long birthDay, String token, int roleType) {
+    public User(long uid, String userName, String email, long birthDay, String token, int roleType) {
         this.uid = uid;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.userName = userName;
         this.email = email;
         this.birthDay = birthDay;
         this.token = token;
@@ -37,20 +37,20 @@ public class User {
         this.uid = uid;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getId() {
+        return id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -83,5 +83,13 @@ public class User {
 
     public void setRoleType(int roleType) {
         this.roleType = roleType;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 }

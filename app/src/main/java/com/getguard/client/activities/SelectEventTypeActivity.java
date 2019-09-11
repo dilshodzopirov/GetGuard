@@ -64,6 +64,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
 
         adapter = new RequestTypeAdapter(item -> {
             Intent intent = new Intent(SelectEventTypeActivity.this, NewEventActivity.class);
+            intent.putExtra("eventType", item.getType());
             startActivity(intent);
         });
 

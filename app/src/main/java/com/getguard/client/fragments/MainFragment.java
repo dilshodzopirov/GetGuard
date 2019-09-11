@@ -33,13 +33,14 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = AppDatabase.getInstance(getActivity()).getUserDAO().getUser();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        user = AppDatabase.getInstance(getActivity()).getUserDAO().getUser();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         viewPager = view.findViewById(R.id.viewPager);
@@ -55,7 +56,7 @@ public class MainFragment extends Fragment {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        if (user.getRoleType() == 2) {
+        if (user.getRoleType() != 1) {
             createLayout.setVisibility(View.GONE);
         } else {
             createLayout.setOnClickListener(v -> {

@@ -134,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
         CircleImageView imageView = headerLayout.findViewById(R.id.profile_image);
         TextView userNameText = headerLayout.findViewById(R.id.username_text);
 
-        userNameText.setText(user.getFirstName());
+        userNameText.setText(user.getUserName());
         Glide.with(this)
-                .load(Config.BASE_URL + "")
+                .load(Config.BASE_URL + "api/Upload/" + user.getPhotoId())
                 .apply(new RequestOptions().centerCrop())
                 .into(imageView);
 

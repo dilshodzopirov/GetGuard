@@ -1,12 +1,14 @@
 package com.getguard.client.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,7 +39,7 @@ public class MyRequestActivity extends AppCompatActivity {
     private LinearLayout contentLayout, errorContainer, closeContainer;
     private TextView errorText;
     private Button errorBtn;
-    private TextView eventText, addressText, dateText, priceText;
+    private TextView eventText, addressText, dateText, priceText, responseText;
     private ImageView bgImg;
     private RecyclerView recyclerView;
     private CardView holder;
@@ -45,6 +48,7 @@ public class MyRequestActivity extends AppCompatActivity {
     private EventResponse.Data data;
     private User user;
     private UsersAdapter adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,12 @@ public class MyRequestActivity extends AppCompatActivity {
 
         id = getIntent().getStringExtra("id");
 
-        getSupportActionBar().setTitle("Заявка Nº341588");
+        getSupportActionBar().setTitle("Заявка");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Подождите...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         contentLayout = findViewById(R.id.content_layout);
         progressBar = findViewById(R.id.progress_bar);
@@ -75,6 +84,18 @@ public class MyRequestActivity extends AppCompatActivity {
         bgImg = findViewById(R.id.bg_img);
         recyclerView = findViewById(R.id.recycler_view);
         closeContainer = findViewById(R.id.close_container);
+        responseText = findViewById(R.id.response_text);
+
+        closeContainer.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Удалить")
+                    .setMessage("Вы хотите удалить эту заявку?")
+                    .setPositiveButton("Да", (dialog, which) -> {
+                        deleteEvent();
+                    })
+                    .setNegativeButton("Отмена", null)
+                    .show();
+        });
 
         errorBtn.setOnClickListener(v -> {
             showProgress();
@@ -93,6 +114,7 @@ public class MyRequestActivity extends AppCompatActivity {
         adapter = new UsersAdapter(item -> {
             Intent intent = new Intent(MyRequestActivity.this, UserDetailsActivity.class);
             intent.putExtra("id", item.getId());
+            intent.putExtra("eventId", data.getId());
             startActivity(intent);
         });
 
@@ -154,11 +176,28 @@ public class MyRequestActivity extends AppCompatActivity {
                             .into(bgImg);
                 }
 
+                int responses = 0;
+                if (data.getRespondedUsers() != null) responses = data.getRespondedUsers().size();
+                responseText.setText(responses + " откликов");
                 adapter.setItems(data.getRespondedUsers());
 
 
                 showContent();
 
+            }
+        });
+    }
+
+    private void deleteEvent() {
+        progressDialog.show();
+        NetworkManager.getInstance(this).deleteEvent(user.getToken(), id, (errorMessage, data) -> {
+            progressDialog.hide();
+            if (errorMessage != null) {
+                Toast.makeText(MyRequestActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+
+            if (data != null) {
+                finish();
             }
         });
     }

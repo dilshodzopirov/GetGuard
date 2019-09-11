@@ -23,10 +23,10 @@
                 android:gravity="center">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image"
                     android:layout_width="142dp"
                     android:layout_height="142dp"
-                    android:layout_margin="20dp"
-                    android:src="@drawable/rectangle" />
+                    android:layout_margin="20dp" />
 
             </LinearLayout>
 
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:rating="5" />
+                android:rating="0" />
 
             <TextView
                 android:id="@+id/rating_text"
@@ -47,19 +47,21 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/museo_sans_cyrl_100"
-                android:text="5.0, 64 Оценки"
+                android:text="-, - Оценки"
                 android:textColor="#4F4F4F"
                 android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/first_name_text"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/first_name_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:fontFamily="@font/museo_sans_cyrl_500"
+                android:textSize="16sp"
+                android:hint="Имя"
                 android:text="Петров"
-                android:textColor="#4F4F4F"
-                android:textSize="16sp" />
+                android:background="@drawable/edit_text_bg"
+                android:textColor="#4F4F4F" />
 
             <View
                 android:layout_width="match_parent"
@@ -67,14 +69,16 @@
                 android:layout_marginLeft="16dp"
                 android:background="@color/colorGray" />
 
-            <TextView
-                android:id="@+id/last_name_text"
+            <EditText
+                android:id="@+id/last_name_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:fontFamily="@font/museo_sans_cyrl_500"
+                android:hint="Фамилия"
                 android:text="Александр"
                 android:textColor="#4F4F4F"
+                android:background="@drawable/edit_text_bg"
                 android:textSize="16sp" />
 
             <View
@@ -83,14 +87,16 @@
                 android:layout_marginLeft="16dp"
                 android:background="@color/colorGray" />
 
-            <TextView
-                android:id="@+id/fathers_name_text"
+            <EditText
+                android:id="@+id/fathers_name_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:fontFamily="@font/museo_sans_cyrl_500"
+                android:hint="Отчество"
                 android:text="Викторович"
                 android:textColor="#4F4F4F"
+                android:background="@drawable/edit_text_bg"
                 android:textSize="16sp" />
 
             <View
@@ -99,13 +105,14 @@
                 android:layout_marginLeft="16dp"
                 android:background="@color/colorGray" />
 
-            <TextView
-                android:id="@+id/phone_number_text"
+            <EditText
+                android:id="@+id/phone_number_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:fontFamily="@font/museo_sans_cyrl_500"
-                android:text="+7 985 55-55-55"
+                android:hint="Номер телефона"
+                android:background="@drawable/edit_text_bg"
                 android:textColor="#4F4F4F"
                 android:textSize="16sp" />
 
