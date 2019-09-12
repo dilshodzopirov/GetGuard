@@ -92,4 +92,10 @@ public class User {
     public void setPhotoId(String photoId) {
         this.photoId = photoId;
     }
+
+
+    public boolean isGuard() {
+        return roleType != 1;
+    }
+
 }

@@ -63,7 +63,7 @@ public class SelectEventTypeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new RequestTypeAdapter(item -> {
-            Intent intent = new Intent(SelectEventTypeActivity.this, NewEventActivity.class);
+            Intent intent = new Intent(SelectEventTypeActivity.this, EventDetailsActivity.class);
             intent.putExtra("eventType", item.getType());
             startActivity(intent);
         });

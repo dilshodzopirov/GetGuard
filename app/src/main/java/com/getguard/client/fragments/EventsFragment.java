@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.getguard.client.R;
+import com.getguard.client.activities.ActiveEventDetailsActivity;
+import com.getguard.client.activities.MyEventDetailsActivity;
 import com.getguard.client.activities.EventDetailsActivity;
-import com.getguard.client.activities.MyRequestActivity;
-import com.getguard.client.activities.NewEventActivity;
 import com.getguard.client.adapters.RequestAdapter;
 import com.getguard.client.database.AppDatabase;
 import com.getguard.client.database.User;
@@ -76,15 +76,20 @@ public class EventsFragment extends Fragment {
 
         adapter = new RequestAdapter(item -> {
             if (filter == 0) {
-                Intent intent = new Intent(getActivity(), NewEventActivity.class);
+                Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
                 intent.putExtra("id", item.getId());
+                if (user.isGuard()) {
+                    intent.putExtra("viewState", EventDetailsActivity.ViewState.register);
+                } else {
+                    intent.putExtra("viewState", EventDetailsActivity.ViewState.details);
+                }
                 startActivity(intent);
             } else if (filter == 1) {
-                Intent intent = new Intent(getActivity(), MyRequestActivity.class);
+                Intent intent = new Intent(getActivity(), MyEventDetailsActivity.class);
                 intent.putExtra("id", item.getId());
                 startActivity(intent);
             } else if (filter == 2) {
-                Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), ActiveEventDetailsActivity.class);
                 intent.putExtra("id", item.getId());
                 startActivity(intent);
             }

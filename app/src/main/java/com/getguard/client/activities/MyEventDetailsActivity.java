@@ -33,7 +33,7 @@ import com.getguard.client.utils.Config;
 import com.getguard.client.utils.Consts;
 import com.getguard.client.utils.Utils;
 
-public class MyRequestActivity extends AppCompatActivity {
+public class MyEventDetailsActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private LinearLayout contentLayout, errorContainer, closeContainer;
@@ -53,7 +53,7 @@ public class MyRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_request);
+        setContentView(R.layout.activity_my_event_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -103,8 +103,13 @@ public class MyRequestActivity extends AppCompatActivity {
         });
 
         holder.setOnClickListener(v -> {
-            Intent intent = new Intent(MyRequestActivity.this, NewEventActivity.class);
+            Intent intent = new Intent(MyEventDetailsActivity.this, EventDetailsActivity.class);
             intent.putExtra("id", data.getId());
+            if (user.isGuard()) {
+                intent.putExtra("viewState", EventDetailsActivity.ViewState.unregister);
+            } else {
+                intent.putExtra("viewState", EventDetailsActivity.ViewState.details);
+            }
             startActivity(intent);
         });
 
@@ -112,7 +117,7 @@ public class MyRequestActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new UsersAdapter(item -> {
-            Intent intent = new Intent(MyRequestActivity.this, UserDetailsActivity.class);
+            Intent intent = new Intent(MyEventDetailsActivity.this, UserDetailsActivity.class);
             intent.putExtra("id", item.getId());
             intent.putExtra("eventId", data.getId());
             startActivity(intent);
@@ -170,7 +175,7 @@ public class MyRequestActivity extends AppCompatActivity {
                     addressText.setText(data.getAddress());
                     dateText.setText(Utils.dateFormat(data.getStartDate()) + " - " + Utils.dateFormat(data.getEndDate()));
                     priceText.setText(String.valueOf(data.getRatePrice()));
-                    Glide.with(MyRequestActivity.this)
+                    Glide.with(MyEventDetailsActivity.this)
                             .load(Config.BASE_URL + eventType.getUrl())
                             .apply(new RequestOptions().centerCrop())
                             .into(bgImg);
@@ -193,7 +198,7 @@ public class MyRequestActivity extends AppCompatActivity {
         NetworkManager.getInstance(this).deleteEvent(user.getToken(), id, (errorMessage, data) -> {
             progressDialog.hide();
             if (errorMessage != null) {
-                Toast.makeText(MyRequestActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                Toast.makeText(MyEventDetailsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
 
             if (data != null) {

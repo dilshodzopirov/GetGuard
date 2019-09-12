@@ -69,6 +69,10 @@ public interface APIService {
     Observable<HireResponse> respond(@Header("Authorization") String token, @Path("id") String id);
 
     @Headers({"Content-Type: application/json-patch+json"})
+    @POST("/api/event/{id}/unregister")
+    Observable<HireResponse> unrespond(@Header("Authorization") String token, @Path("id") String id);
+
+    @Headers({"Content-Type: application/json-patch+json"})
     @GET("/api/User/{id}")
     Observable<UserByIdResponse> getUser(@Header("Authorization") String token, @Path("id") String id);
 

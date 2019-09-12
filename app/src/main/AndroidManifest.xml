@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.MyRequestActivity"></activity>
+        <activity android:name=".activities.MyEventDetailsActivity"></activity>
         <activity android:name=".activities.OfferActivity" />
         <activity
             android:name=".activities.LoginActivity"
@@ -31,9 +31,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.UserDetailsActivity" />
-        <activity android:name=".activities.EventDetailsActivity" />
+        <activity android:name=".activities.ActiveEventDetailsActivity" />
         <activity
-            android:name=".activities.NewEventActivity"
+            android:name=".activities.EventDetailsActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.SelectEventTypeActivity" />
         <activity android:name=".activities.MainActivity" />
