@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -74,6 +75,10 @@ public class EventDetailsActivity extends AppCompatActivity {
     public enum ViewState {
             newEvent, details, register, unregister;
     }
+
+    public static int CREATED = 1111;
+    public static int REGISTERED = 2222;
+    public static int UNREGISTERED = 3333;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -580,7 +585,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
 
             if (data != null) {
-                finish();
+                setResult(Activity.RESULT_OK);
+                finishActivity(CREATED);
             }
         });
     }
@@ -616,7 +622,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                     }
 
                     if (data != null) {
-                        finish();
+                        setResult(Activity.RESULT_OK);
+                        finishActivity(REGISTERED);
                     }
                 });
     }
@@ -632,7 +639,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
 
             if (data != null) {
-                finish();
+                setResult(Activity.RESULT_OK);
+                finishActivity(UNREGISTERED);
             }
         });
     }

@@ -32,10 +32,10 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private LinearLayout contentLayout, errorContainer, closeContainer, executorContainer, messageContainer,
-    callContainer, supportContainer;
+            callContainer, supportContainer;
     private TextView errorText;
     private Button errorBtn;
-    private TextView eventText, addressText, dateText, priceText, nameText, ratingText;
+    private TextView eventText, addressText, dateText, priceText, nameText, ratingText, titleText;
     private ImageView bgImg, guardImg;
     private RatingBar ratingBar;
     private CardView holder;
@@ -43,6 +43,15 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
     private String id;
     private EventResponse.Data data;
     private User user;
+
+    private ViewState viewState;
+
+    public enum ViewState {
+        clientInfo, guardMy, guardActive;
+    }
+
+    public static int STARTED = 1111;
+    public static int ENDED = 2222;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,7 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
         id = getIntent().getStringExtra("id");
 
         getSupportActionBar().setTitle("Заявка");
+        viewState = (ViewState) getIntent().getSerializableExtra("viewState");
 
         contentLayout = findViewById(R.id.content_layout);
         progressBar = findViewById(R.id.progress_bar);
@@ -81,6 +91,7 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
         supportContainer = findViewById(R.id.support_container);
         closeContainer = findViewById(R.id.close_container);
         holder = findViewById(R.id.holder);
+        titleText = findViewById(R.id.title_text);
 
         holder.setOnClickListener(v -> {
             Intent intent = new Intent(ActiveEventDetailsActivity.this, EventDetailsActivity.class);
@@ -129,6 +140,74 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void setData() {
+
+        EventType eventType = Consts.eventTypeMap.get(data.getEventType());
+        if (eventType != null) {
+            eventText.setText(eventType.getName());
+            addressText.setText(data.getAddress());
+            dateText.setText(Utils.dateFormat(data.getStartDate()) + " - " + Utils.dateFormat(data.getEndDate()));
+            priceText.setText(String.valueOf(data.getRatePrice()));
+            Glide.with(ActiveEventDetailsActivity.this)
+                    .load(Config.BASE_URL + eventType.getUrl())
+                    .apply(new RequestOptions().centerCrop())
+                    .into(bgImg);
+        }
+
+        if (viewState == ViewState.guardActive || viewState == ViewState.guardMy) {
+            titleText.setText("Заказчик");
+            ratingBar.setVisibility(View.GONE);
+            ratingText.setVisibility(View.GONE);
+
+            EventResponse.Creator creator = data.getCreator();
+            if (creator != null) {
+                if (creator.getPhoto() != null) {
+                    Glide.with(this)
+                            .load(Config.BASE_URL + "api/Upload/" + creator.getPhoto().getId())
+                            .apply(new RequestOptions().centerCrop())
+                            .into(guardImg);
+                }
+                nameText.setText(creator.getUserName());
+
+                callContainer.setOnClickListener(v -> {
+//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+//                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
+//                        startActivity(callIntent);
+                });
+
+            }
+        } else {
+            EventResponse.Executor executor = data.getExecutor();
+            if (executor != null) {
+                if (executor.getPhoto() != null) {
+                    Glide.with(this)
+                            .load(Config.BASE_URL + "api/Upload/" + executor.getPhoto().getId())
+                            .apply(new RequestOptions().centerCrop())
+                            .into(guardImg);
+                }
+                nameText.setText(executor.getUserName());
+                ratingText.setText(executor.getRating() + ", " + executor.getUserRatingCount() + "Оценки");
+                ratingBar.setRating(executor.getRating());
+
+                executorContainer.setOnClickListener(v -> {
+                    Intent intent = new Intent(ActiveEventDetailsActivity.this, UserDetailsActivity.class);
+                    intent.putExtra("id", executor.getId());
+                    intent.putExtra("eventId", id);
+                    startActivity(intent);
+                });
+
+                callContainer.setOnClickListener(v -> {
+//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+//                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
+//                        startActivity(callIntent);
+                });
+
+            }
+        }
+
+
+    }
+
     private void getEvent() {
         NetworkManager.getInstance(this).getEvent(user.getToken(), id, (errorMessage, data) -> {
             if (errorMessage != null) {
@@ -137,47 +216,8 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
 
             if (data != null) {
                 this.data = data;
-
-                EventType eventType = Consts.eventTypeMap.get(data.getEventType());
-                if (eventType != null) {
-                    eventText.setText(eventType.getName());
-                    addressText.setText(data.getAddress());
-                    dateText.setText(Utils.dateFormat(data.getStartDate()) + " - " + Utils.dateFormat(data.getEndDate()));
-                    priceText.setText(String.valueOf(data.getRatePrice()));
-                    Glide.with(ActiveEventDetailsActivity.this)
-                            .load(Config.BASE_URL + eventType.getUrl())
-                            .apply(new RequestOptions().centerCrop())
-                            .into(bgImg);
-                }
-
-                EventResponse.Executor executor = data.getExecutor();
-                if (executor != null) {
-                    if (executor.getPhoto() != null) {
-                        Glide.with(this)
-                                .load(Config.BASE_URL + "api/Upload/" + executor.getPhoto().getId())
-                                .apply(new RequestOptions().centerCrop())
-                                .into(guardImg);
-                    }
-                    nameText.setText(executor.getUserName());
-                    ratingText.setText(executor.getRating() + ", " + executor.getUserRatingCount() + "Оценки");
-                    ratingBar.setRating(executor.getRating());
-
-                    executorContainer.setOnClickListener(v -> {
-                        Intent intent = new Intent(ActiveEventDetailsActivity.this, UserDetailsActivity.class);
-                        intent.putExtra("id", executor.getId());
-                        intent.putExtra("eventId", id);
-                        startActivity(intent);
-                    });
-
-                    callContainer.setOnClickListener(v -> {
-//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-//                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
-//                        startActivity(callIntent);
-                    });
-
-                }
+                setData();
                 showContent();
-
 
             }
         });

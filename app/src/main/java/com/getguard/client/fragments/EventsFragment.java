@@ -83,14 +83,26 @@ public class EventsFragment extends Fragment {
                 } else {
                     intent.putExtra("viewState", EventDetailsActivity.ViewState.details);
                 }
-                startActivity(intent);
+                startActivityForResult(intent, EventDetailsActivity.REGISTERED);
             } else if (filter == 1) {
-                Intent intent = new Intent(getActivity(), MyEventDetailsActivity.class);
-                intent.putExtra("id", item.getId());
-                startActivity(intent);
+                if (user.isGuard()) {
+                    Intent intent = new Intent(getActivity(), ActiveEventDetailsActivity.class);
+                    intent.putExtra("id", item.getId());
+                    intent.putExtra("viewState", ActiveEventDetailsActivity.ViewState.guardMy);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), MyEventDetailsActivity.class);
+                    intent.putExtra("id", item.getId());
+                    startActivity(intent);
+                }
             } else if (filter == 2) {
                 Intent intent = new Intent(getActivity(), ActiveEventDetailsActivity.class);
                 intent.putExtra("id", item.getId());
+                if (user.isGuard()) {
+                    intent.putExtra("viewState", ActiveEventDetailsActivity.ViewState.guardActive);
+                } else {
+                    intent.putExtra("viewState", ActiveEventDetailsActivity.ViewState.clientInfo);
+                }
                 startActivity(intent);
             }
         });

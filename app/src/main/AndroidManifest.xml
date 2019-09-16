@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activities.MyEventDetailsActivity"></activity>
+        <activity android:name=".activities.OnBoardingActivity"></activity>
+        <activity android:name=".activities.MyEventDetailsActivity" />
         <activity android:name=".activities.OfferActivity" />
         <activity
             android:name=".activities.LoginActivity"
