@@ -1,11 +1,13 @@
 package com.getguard.client.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -65,7 +67,8 @@ public class SelectEventTypeActivity extends AppCompatActivity {
         adapter = new RequestTypeAdapter(item -> {
             Intent intent = new Intent(SelectEventTypeActivity.this, EventDetailsActivity.class);
             intent.putExtra("eventType", item.getType());
-            startActivity(intent);
+            intent.putExtra("viewState", EventDetailsActivity.ViewState.newEvent);
+            startActivityForResult(intent, 5555);
         });
 
         recyclerView.setAdapter(adapter);
@@ -84,6 +87,16 @@ public class SelectEventTypeActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 5555) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void showContent() {

@@ -1,5 +1,6 @@
 package com.getguard.client.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.getguard.client.R;
 import com.getguard.client.activities.ActiveEventDetailsActivity;
+import com.getguard.client.activities.MainActivity;
 import com.getguard.client.activities.MyEventDetailsActivity;
 import com.getguard.client.activities.EventDetailsActivity;
 import com.getguard.client.adapters.RequestAdapter;
@@ -35,6 +38,8 @@ public class EventsFragment extends Fragment {
     private LinearLayout errorContainer;
     private TextView errorText, emptyText;
     private Button errorBtn;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     private User user;
 
     private RequestAdapter adapter;
@@ -70,6 +75,7 @@ public class EventsFragment extends Fragment {
         errorText = view.findViewById(R.id.error_text);
         errorBtn = view.findViewById(R.id.error_btn);
         emptyText = view.findViewById(R.id.empty_text);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -83,17 +89,17 @@ public class EventsFragment extends Fragment {
                 } else {
                     intent.putExtra("viewState", EventDetailsActivity.ViewState.details);
                 }
-                startActivityForResult(intent, EventDetailsActivity.REGISTERED);
+                this.startActivityForResult(intent, EventDetailsActivity.REGISTERED);
             } else if (filter == 1) {
                 if (user.isGuard()) {
-                    Intent intent = new Intent(getActivity(), ActiveEventDetailsActivity.class);
+                    Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
                     intent.putExtra("id", item.getId());
-                    intent.putExtra("viewState", ActiveEventDetailsActivity.ViewState.guardMy);
-                    startActivity(intent);
+                    intent.putExtra("viewState", EventDetailsActivity.ViewState.unregister);
+                    startActivityForResult(intent, EventDetailsActivity.UNREGISTERED);
                 } else {
                     Intent intent = new Intent(getActivity(), MyEventDetailsActivity.class);
                     intent.putExtra("id", item.getId());
-                    startActivity(intent);
+                    startActivityForResult(intent, 7777);
                 }
             } else if (filter == 2) {
                 Intent intent = new Intent(getActivity(), ActiveEventDetailsActivity.class);
@@ -110,8 +116,11 @@ public class EventsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         errorBtn.setOnClickListener(v -> {
+            swipeRefreshLayout.setRefreshing(true);
             getEventTypes();
         });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> getEvents());
 
         getEventTypes();
 
@@ -122,6 +131,17 @@ public class EventsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK &&
+                (requestCode == EventDetailsActivity.REGISTERED || requestCode == EventDetailsActivity.UNREGISTERED)) {
+            getEvents();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == 7777) {
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void showContent() {
@@ -151,7 +171,7 @@ public class EventsFragment extends Fragment {
         }
     }
 
-    private void getEventTypes() {
+    public void getEventTypes() {
         showProgress();
         if (Consts.eventTypeMap.size() == 0) {
             NetworkManager.getInstance(getActivity()).getEventTypes(user.getToken(), (errorMessage, eventTypes) -> {
@@ -174,6 +194,9 @@ public class EventsFragment extends Fragment {
 
     private void getEvents() {
         NetworkManager.getInstance(getActivity()).getEvents(user.getToken(), filter, (errorMessage, events) -> {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
             if (errorMessage != null) {
                 showError(errorMessage);
             }

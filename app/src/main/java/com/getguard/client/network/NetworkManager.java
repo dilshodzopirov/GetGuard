@@ -419,6 +419,70 @@ public class NetworkManager {
 
     }
 
+    public void start(String token, String id, final BiConsumer<String, Boolean> consumer) {
+        apiService.start(token, id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HireResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(HireResponse response) {
+                        if (response.getErrorMessage() != null) {
+                            consumer.accept(response.getErrorMessage()[0], null);
+                        } else {
+                            consumer.accept(null, response.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public void end(String token, String id, final BiConsumer<String, Boolean> consumer) {
+        apiService.end(token, id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HireResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(HireResponse response) {
+                        if (response.getErrorMessage() != null) {
+                            consumer.accept(response.getErrorMessage()[0], null);
+                        } else {
+                            consumer.accept(null, response.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
     private String getErrorMessage(Throwable e) {
         if (e instanceof HttpException) {
             ResponseBody responseBody = ((HttpException)e).response().errorBody();

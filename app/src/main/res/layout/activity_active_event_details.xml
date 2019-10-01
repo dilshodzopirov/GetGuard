@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -162,8 +162,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Написать сообщение"
+                            android:fontFamily="@font/museo_sans_cyrl_300"
                             android:textColor="@color/text_black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:layout_width="24dp"
@@ -199,8 +200,9 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Позвонить"
+                            android:fontFamily="@font/museo_sans_cyrl_300"
                             android:textColor="@color/text_black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:layout_width="24dp"
@@ -235,9 +237,10 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:fontFamily="@font/museo_sans_cyrl_300"
                             android:text="Обратиться в поддержку"
                             android:textColor="@color/text_black"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:layout_width="24dp"
@@ -254,6 +257,46 @@
                         android:layout_height="0.1dp"
                         android:background="@color/colorGray" />
 
+                    <LinearLayout
+                        android:id="@+id/date_info_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/start_info_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Фиксация начала смены: 03.02.2019, 19:22"
+                            android:fontFamily="@font/museo_sans_cyrl_300"
+                            android:textColor="@color/text_black"
+                            android:textSize="14sp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/time_left_info_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="ДО КОНЦА СМЕНЫ ОСТАНОСЬ:"
+                            android:fontFamily="@font/museo_sans_cyrl_500"
+                            android:textColor="@color/text_black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/time_status_info_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="смена окончена"
+                            android:fontFamily="@font/museo_sans_cyrl_700"
+                            android:textColor="@color/text_black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </ScrollView>
@@ -267,6 +310,7 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/close_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"

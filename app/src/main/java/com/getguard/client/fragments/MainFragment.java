@@ -1,5 +1,6 @@
 package com.getguard.client.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,9 @@ public class MainFragment extends Fragment {
     private LinearLayout createLayout;
 
     private User user;
+    private EventsFragment allFragment;
+    private EventsFragment myFragment;
+    private EventsFragment activeFragment;
 
     public MainFragment() {
         // Required empty public constructor
@@ -47,12 +51,16 @@ public class MainFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         createLayout = view.findViewById(R.id.create_layout);
 
+        allFragment = EventsFragment.newInstance(0);
+        myFragment = EventsFragment.newInstance(1);
+        activeFragment = EventsFragment.newInstance(2);
+
         viewPager.setOffscreenPageLimit(3);
 
         adapter = new TabAdapter(getChildFragmentManager());
-        adapter.addFragment(EventsFragment.newInstance(0), "Все");
-        adapter.addFragment(EventsFragment.newInstance(1), "Мои заявки");
-        adapter.addFragment(EventsFragment.newInstance(2), "Активные");
+        adapter.addFragment(allFragment, "Все");
+        adapter.addFragment(myFragment, "Мои заявки");
+        adapter.addFragment(activeFragment, "Активные");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -60,11 +68,24 @@ public class MainFragment extends Fragment {
             createLayout.setVisibility(View.GONE);
         } else {
             createLayout.setOnClickListener(v -> {
-                startActivity(new Intent(getActivity(), SelectEventTypeActivity.class));
+                this.startActivityForResult(new Intent(getActivity(), SelectEventTypeActivity.class), 6666);
             });
         }
 
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 6666) {
+            if (allFragment != null) {
+                allFragment.getEventTypes();
+            }
+            if (myFragment != null) {
+                myFragment.getEventTypes();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

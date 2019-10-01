@@ -24,6 +24,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -79,6 +80,15 @@ public interface APIService {
     @Headers({"Content-Type: application/json-patch+json"})
     @POST("/api/event/{id}/executor/{executorId}")
     Observable<HireResponse> hire(@Header("Authorization") String token, @Path("id") String id, @Path("executorId") String executorId);
+
+    @Headers({"Content-Type: application/json-patch+json"})
+    @PATCH("/api/event/{id}/start")
+    Observable<HireResponse> start(@Header("Authorization") String token, @Path("id") String id);
+
+    @Headers({"Content-Type: application/json-patch+json"})
+    @PATCH("/api/event/{id}/end")
+    Observable<HireResponse> end(@Header("Authorization") String token, @Path("id") String id);
+
 
 
 }

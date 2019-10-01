@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -28,14 +30,20 @@ import com.getguard.client.utils.Config;
 import com.getguard.client.utils.Consts;
 import com.getguard.client.utils.Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class ActiveEventDetailsActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private LinearLayout contentLayout, errorContainer, closeContainer, executorContainer, messageContainer,
-            callContainer, supportContainer;
+            callContainer, supportContainer, dateInfoLayout;
     private TextView errorText;
     private Button errorBtn;
-    private TextView eventText, addressText, dateText, priceText, nameText, ratingText, titleText;
+    private TextView eventText, addressText, dateText, priceText, nameText, ratingText, titleText, closeText,
+            startInfoText, timeLeftInfoText, timeStatusInfoText;
     private ImageView bgImg, guardImg;
     private RatingBar ratingBar;
     private CardView holder;
@@ -45,6 +53,7 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
     private User user;
 
     private ViewState viewState;
+    private ProgressDialog progressDialog;
 
     public enum ViewState {
         clientInfo, guardMy, guardActive;
@@ -63,6 +72,11 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Подождите...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         user = AppDatabase.getInstance(this).getUserDAO().getUser();
 
@@ -90,8 +104,13 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
         callContainer = findViewById(R.id.call_container);
         supportContainer = findViewById(R.id.support_container);
         closeContainer = findViewById(R.id.close_container);
+        closeText = findViewById(R.id.close_text);
         holder = findViewById(R.id.holder);
         titleText = findViewById(R.id.title_text);
+        dateInfoLayout = findViewById(R.id.date_info_layout);
+        startInfoText = findViewById(R.id.start_info_text);
+        timeLeftInfoText = findViewById(R.id.time_left_info_text);
+        timeStatusInfoText = findViewById(R.id.time_status_info_text);
 
         holder.setOnClickListener(v -> {
             Intent intent = new Intent(ActiveEventDetailsActivity.this, EventDetailsActivity.class);
@@ -106,6 +125,17 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
         });
 
         getEvent();
+
+        switch (viewState) {
+            case clientInfo:
+                break;
+            case guardMy:
+                break;
+            case guardActive:
+                supportContainer.setVisibility(View.GONE);
+                dateInfoLayout.setVisibility(View.VISIBLE);
+                break;
+        }
 
     }
 
@@ -170,11 +200,56 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
                 nameText.setText(creator.getUserName());
 
                 callContainer.setOnClickListener(v -> {
-//                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
-//                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
-//                        startActivity(callIntent);
+                    //                        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    //                        callIntent.setData(Uri.parse("tel:" + data.get));//change the number
+                    //                        startActivity(callIntent);
                 });
 
+            }
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", new Locale("ru"));
+            SimpleDateFormat displayFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm", new Locale("ru"));
+
+            if (data.getStartDate() != null && data.getEndDate() != null) {
+                try {
+                    Date startDate = simpleDateFormat.parse(data.getStartDate());
+                    Date endDate = simpleDateFormat.parse(data.getEndDate());
+                    Date currentDate = new Date();
+                    if (startDate.getTime() > currentDate.getTime()) {
+                        timeLeftInfoText.setText("ДО НАЧАЛА СМЕНЫ ОСТАНОСЬ:");
+                        long secs = (startDate.getTime() - currentDate.getTime()) / 1000;
+                        int hours = (int) secs / 3600;
+                        secs = secs % 3600;
+                        int mins = (int) secs / 60;
+                        secs = secs % 60;
+                        timeStatusInfoText.setText(getHourText(hours) + " " + getMinutesText(mins));
+                        closeText.setText("Начать смену");
+                        closeContainer.setOnClickListener(v -> {
+                            start();
+                        });
+                    } else {
+                        startInfoText.setVisibility(View.VISIBLE);
+                        startInfoText.setText("Фиксация начала смены: " + displayFormat.format(data.getStartDate()));
+                        timeLeftInfoText.setText("ДО КОНЦА СМЕНЫ ОСТАНОСЬ:");
+                        if ((endDate.getTime() > currentDate.getTime())) {
+                            long secs = (endDate.getTime() - currentDate.getTime()) / 1000;
+                            int hours = (int) secs / 3600;
+                            secs = secs % 3600;
+                            int mins = (int) secs / 60;
+                            secs = secs % 60;
+                            timeStatusInfoText.setText(getHourText(hours) + " " + getMinutesText(mins));
+                        } else {
+                            timeStatusInfoText.setText("смена окончена");
+                        }
+                        closeText.setText("Завершить смену");
+                        closeContainer.setOnClickListener(v -> {
+                            end();
+                        });
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             EventResponse.Executor executor = data.getExecutor();
@@ -208,6 +283,22 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
 
     }
 
+    private String getHourText(int hours) {
+        int num = hours;
+        if (num > 15) num %= 10;
+        if (num == 1) return hours + " час";
+        else if (num == 2 || num == 3 || num == 4) return hours + " часа";
+        else return hours + " часов";
+    }
+
+    private String getMinutesText(int minutes) {
+        int num = minutes;
+        if (num > 15) num %= 10;
+        if (num == 1) return minutes + " минута";
+        else if (num == 2 || num == 3 || num == 4) return minutes + " минуты";
+        else return minutes + " минут";
+    }
+
     private void getEvent() {
         NetworkManager.getInstance(this).getEvent(user.getToken(), id, (errorMessage, data) -> {
             if (errorMessage != null) {
@@ -219,6 +310,36 @@ public class ActiveEventDetailsActivity extends AppCompatActivity {
                 setData();
                 showContent();
 
+            }
+        });
+    }
+
+    private void start() {
+        progressDialog.show();
+        NetworkManager.getInstance(this).start(user.getToken(), id, (errorMessage, data) -> {
+            progressDialog.dismiss();
+            if (errorMessage != null) {
+                showError(errorMessage);
+            }
+
+            if (data != null) {
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+        });
+    }
+
+    private void end() {
+        progressDialog.show();
+        NetworkManager.getInstance(this).end(user.getToken(), id, (errorMessage, data) -> {
+            progressDialog.dismiss();
+            if (errorMessage != null) {
+                showError(errorMessage);
+            }
+
+            if (data != null) {
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
     }

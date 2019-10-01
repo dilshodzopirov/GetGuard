@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -68,12 +69,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     private String id;
     private EventResponse.Data data;
     private ProgressDialog progressDialog;
-    private String startTime, endTime;
+    private Date startTime, endTime;
     private int eventType;
     private ViewState viewState;
 
     public enum ViewState {
-            newEvent, details, register, unregister;
+        newEvent, details, register, unregister;
     }
 
     public static int CREATED = 1111;
@@ -187,7 +188,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1111 && resultCode == RESULT_OK) {
-            offerAmountText.setText(data.getStringExtra("amount"));
+            String amount = data.getStringExtra("amount");
+            offerAmountText.setText(amount);
             offerAmountLayout.setVisibility(View.VISIBLE);
         }
 
@@ -280,8 +282,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     .title("Начало смены")
                     .listener(date -> {
                         startTimeInput.setText("Начало смены - " + dateFormat.format(date));
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                        startTime = sdf.format(new Date());
+                        startTime = date;
                     })
                     .display();
         });
@@ -296,14 +297,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                     .title("Конец смены")
                     .listener(date -> {
                         endTimeInput.setText("Конец смены - " + dateFormat.format(date));
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-                        endTime = sdf.format(new Date());
+                        endTime = date;
                     })
                     .display();
         });
 
         offerLayout.setOnClickListener(v -> {
-            startActivityForResult(new Intent(EventDetailsActivity.this, OfferActivity.class), 1111);
+            Intent intent = new Intent(EventDetailsActivity.this, OfferActivity.class);
+            int hours = (startTime == null || endTime == null) ? 0 :
+                    (int) ((startTime.getTime() - endTime.getTime()) / 1000) / 3600;
+            intent.putExtra("hours", hours);
+            startActivityForResult(intent, 1111);
         });
 
     }
@@ -515,8 +519,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
 
         addressInput.setText(data.getAddress());
-        startTimeInput.setText("Начало смены " + formatDate(data.getJobStartTime()));
-        endTimeInput.setText("Конец смены " + formatDate(data.getGuardJobEndTime()));
+        startTimeInput.setText("Начало смены " + formatDate(data.getStartDate()));
+        endTimeInput.setText("Конец смены " + formatDate(data.getEndDate()));
 
         int responses = data.getRespondedUsers() != null ? data.getRespondedUsers().size() : 0;
         responseText.setText(responses + " откликов");
@@ -564,11 +568,14 @@ public class EventDetailsActivity extends AppCompatActivity {
         } catch (NumberFormatException e) {
 
         }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
         NetworkManager.getInstance(this).createEvent(user.getToken(),
                 addressInput.getText().toString(),
                 addressInput.getText().toString(),
-                startTime,
-                endTime,
+                sdf.format(startTime),
+                sdf.format(endTime),
                 ratePrice,
                 dressCode,
                 hasPrivateGuardLicence,
@@ -578,17 +585,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                 additionalInput.getText().toString(),
                 eventType,
                 (errorMessage, data) -> {
-            progressDialog.dismiss();
+                    progressDialog.dismiss();
 
-            if (errorMessage != null) {
-                Toast.makeText(EventDetailsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-            }
+                    if (errorMessage != null) {
+                        Toast.makeText(EventDetailsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
 
-            if (data != null) {
-                setResult(Activity.RESULT_OK);
-                finishActivity(CREATED);
-            }
-        });
+                    if (data != null) {
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    }
+                });
     }
 
     private boolean isValid() {
@@ -615,17 +622,17 @@ public class EventDetailsActivity extends AppCompatActivity {
         progressDialog.show();
 
         NetworkManager.getInstance(this).respond(user.getToken(), id, (errorMessage, data) -> {
-                    progressDialog.dismiss();
+            progressDialog.dismiss();
 
-                    if (errorMessage != null) {
-                        Toast.makeText(EventDetailsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                    }
-
-                    if (data != null) {
-                        setResult(Activity.RESULT_OK);
-                        finishActivity(REGISTERED);
-                    }
-                });
+            Log.d("TAG", "respond: mana");
+            if (errorMessage != null) {
+                Toast.makeText(EventDetailsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            } else {
+                Log.d("TAG", "respond: success");
+                setResult(Activity.RESULT_OK);
+                finish();
+            }
+        });
     }
 
     private void unrespond() {
@@ -640,7 +647,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             if (data != null) {
                 setResult(Activity.RESULT_OK);
-                finishActivity(UNREGISTERED);
+                finish();
             }
         });
     }

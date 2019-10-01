@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -202,6 +203,7 @@ public class MyEventDetailsActivity extends AppCompatActivity {
             }
 
             if (data != null) {
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         });
