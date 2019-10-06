@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout customerContainer, guardContainer, phoneLayout, ofertaLayout, codeLayout, acceptContainer, formLayout;
     private TextView customerText, guardText, sendSmsText, editNumberText, smsInfoText;
     private View customerLine, guardLine;
+    private EditText firstNameInput, lastNameInput, fathersNameInput;
 
     private int white, yellow;
     private ViewState viewState = ViewState.phone;
@@ -92,6 +94,9 @@ public class LoginActivity extends AppCompatActivity {
         smsInfoText = findViewById(R.id.sms_info_text);
         formLayout = findViewById(R.id.layout_form);
         formContinueBtn = findViewById(R.id.form_continue_btn);
+        firstNameInput = findViewById(R.id.first_name_input);
+        lastNameInput = findViewById(R.id.last_name_input);
+        fathersNameInput = findViewById(R.id.fathers_name_input);
 
         continueBtn.setOnClickListener(v -> {
             Log.d("test", phoneInput.getText().toString() + " : " + phoneInput.getRawText());
@@ -100,9 +105,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         formContinueBtn.setOnClickListener(v -> {
-            Log.d("test", phoneInput.getText().toString() + " : " + phoneInput.getRawText());
             closeKeyboard();
-            updateViewState(ViewState.oferta);
+            editProfile();
         });
 
         customerContainer.setOnClickListener(v -> switchType(UserType.client));
@@ -160,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
             user.setToken("Bearer " + data.getToken());
             user.setUserName(data.getUser().getUserName());
             user.setEmail(data.getUser().getEmail());
+            user.setPhoneNumber(phoneInput.getText().toString());
             user.setRoleType(data.getUser().getRoleType());
             user.setPhotoId(data.getUser().getPhotoId());
             AppDatabase.getInstance(LoginActivity.this).getUserDAO().insert(user);
@@ -297,6 +302,33 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     data = registerResponse.getData();
                     updateViewState(data.getUser().getRoleType() == 1 ? ViewState.form : ViewState.oferta);
+                }
+            }
+        });
+    }
+
+    private void editProfile() {
+        isLoading = true;
+        progressDialog.show();
+        String userName = firstNameInput.getText().toString() + " " + lastNameInput.getText().toString() + " " + fathersNameInput.getText().toString();
+        String phoneNumber = phoneInput.getText().toString();
+        NetworkManager.getInstance(this).editProfile(
+                "Bearer " + data.getToken(),
+                userName,
+                phoneNumber,
+                "a@a.ru",
+                (error, registerResponse) -> {
+            isLoading = false;
+            progressDialog.dismiss();
+            if (error != null) {
+                UIUtils.showError(this, null, error);
+            }
+
+            if (registerResponse != null) {
+                if (registerResponse.getErrorMessage() != null) {
+                    UIUtils.showError(this, null, registerResponse.getErrorMessage()[0]);
+                } else {
+                    updateViewState(ViewState.oferta);
                 }
             }
         });

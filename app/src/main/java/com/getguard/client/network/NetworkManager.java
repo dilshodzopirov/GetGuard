@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.getguard.client.models.network.CreateResponse;
 import com.getguard.client.models.network.DeleteResponse;
+import com.getguard.client.models.network.EditProfileResponse;
 import com.getguard.client.models.network.EventResponse;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
@@ -468,6 +469,38 @@ public class NetworkManager {
                         } else {
                             consumer.accept(null, response.getData());
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        consumer.accept(getErrorMessage(throwable), null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+    public void editProfile(String token, String userName, String phoneNumber, String email,final BiConsumer<String, EditProfileResponse> consumer) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("userName", userName);
+        jsonObject.addProperty("phoneNumber", phoneNumber);
+        jsonObject.addProperty("email", email);
+        apiService.editProfile(token, jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<EditProfileResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+
+                    }
+
+                    @Override
+                    public void onNext(EditProfileResponse response) {
+                        consumer.accept(null, response);
                     }
 
                     @Override

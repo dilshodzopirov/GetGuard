@@ -4,6 +4,7 @@ import androidx.room.Delete;
 
 import com.getguard.client.models.network.CreateResponse;
 import com.getguard.client.models.network.DeleteResponse;
+import com.getguard.client.models.network.EditProfileResponse;
 import com.getguard.client.models.network.EventResponse;
 import com.getguard.client.models.network.EventType;
 import com.getguard.client.models.network.EventsResponse;
@@ -88,6 +89,11 @@ public interface APIService {
     @Headers({"Content-Type: application/json-patch+json"})
     @PATCH("/api/event/{id}/end")
     Observable<HireResponse> end(@Header("Authorization") String token, @Path("id") String id);
+
+    @Headers({"Content-Type: application/json-patch+json"})
+    @PATCH("/api/User/profile")
+    Observable<EditProfileResponse> editProfile(@Header("Authorization") String token, @Body JsonObject body);
+
 
 
 

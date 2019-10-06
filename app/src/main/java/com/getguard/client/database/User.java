@@ -12,6 +12,7 @@ public class User {
     private String id;
     private String userName;
     private String email;
+    private String phoneNumber;
     private long birthDay;
     private String photoId;
     private String token;
@@ -93,6 +94,13 @@ public class User {
         this.photoId = photoId;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public boolean isGuard() {
         return roleType != 1;
